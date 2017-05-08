@@ -120,7 +120,7 @@ def rendezvous(request):
                 
             rendezvous=Rendezvous.objects.create(doctor=doctor,patient=patient)
             rendezvous.save()
-            return JsonResponse({"status":"OK", "message":""})
+            return JsonResponse({"status":"OK", "message":"rendezvous added"})
         except Exception as e:
             print("wrong format!!!!!\n\n\n\n")
             return JsonResponse({"status":"FAIL", "message":"wrong data format"})
