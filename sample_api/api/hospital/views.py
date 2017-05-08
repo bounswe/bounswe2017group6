@@ -37,7 +37,15 @@ def doctor_single(request, doctor_id):
         return JsonResponse({"name":doctor.name, "lastname":doctor.lastname, "age":doctor.age})
 
     elif request.method == "POST":
-        pass
+        print("post doctor")
+        try:
+            data = json.loads(request.body.decode("utf-8"))
+            doctor = Doctor.objects.create(name=data["name"], lastname=data["lastname"], age=data["age"])
+            doctor.save()
+            return JsonResponse({"status":"OK", "message":""})
+        except Exception as e:
+            print("wrong format!!!!!\n\n\n\n")
+            return JsonResponse({"status":"FAIL", "message":"wrong data format"})
     
     elif request.method=="DELETE":
         doctor = Doctor.objects.filter(id=int(doctor_id))
@@ -137,7 +145,13 @@ def department_single(request, department_id):
 def patient(request):
     print("patient")
     if request.method == "GET":
-        pass
+        if request.method == "GET":
+        patients = Patient.objects.all()
+        response = {}
+        response["patients"] = []
+        for p in patients:
+            response["patients"].append({"name":p.name, "lastname": p.lastname, "age": p.age});
+        return JsonResponse(response)
     elif request.method == "POST":
         print("post patient")
         try:
