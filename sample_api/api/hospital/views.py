@@ -139,18 +139,16 @@ def department_single(request, department_id):
                                 return JsonResponse({"status":"OK", "message":""})
                         else:
                                 return JsonResponse({"status":"FAIL", "message":"department does not exist"})
-                                                         
 
 @csrf_exempt
 def patient(request):
-    print("patient")
     if request.method == "GET":
-        patients = Patient.objects.all()
-        response = {}
-        response["patients"] = []
-        for p in patients:
-            response["patients"].append({"name":p.name, "lastname": p.lastname, "age": p.age});
-        return JsonResponse(response)
+    	patients = Patient.objects.all()
+    	response = {}
+    	response["patients"] = []
+    	for p in patients:
+    		response["patients"].append({"name":p.name, "lastname": p.lastname, "age": p.age});
+    	return JsonResponse(response)
     elif request.method == "POST":
         print("post patient")
         try:
@@ -188,4 +186,4 @@ def rendezvous_single(request,rendezvous_id):
         if rendezvous.exists():
             rendezvous=rendezvous.first()
         return JsonResponse({"Doctor Name":rendezvous.doctor.name + " " + rendezvous.doctor.lastname,"Patient":rendezvous.patient.name+" "+rendezvous.patient.lastname,"Time":str(rendezvous.date)})
- 
+
