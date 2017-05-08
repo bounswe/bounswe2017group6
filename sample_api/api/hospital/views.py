@@ -145,7 +145,6 @@ def department_single(request, department_id):
 def patient(request):
     print("patient")
     if request.method == "GET":
-        if request.method == "GET":
         patients = Patient.objects.all()
         response = {}
         response["patients"] = []
