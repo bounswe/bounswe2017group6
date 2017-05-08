@@ -188,3 +188,4 @@ def rendezvous_single(request,rendezvous_id):
         if rendezvous.exists():
             rendezvous=rendezvous.first()
         return JsonResponse({"Doctor Name":rendezvous.doctor.name + " " + rendezvous.doctor.lastname,"Patient":rendezvous.patient.name+" "+rendezvous.patient.lastname,"Time":str(rendezvous.date)})
+ 
