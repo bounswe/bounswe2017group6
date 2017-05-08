@@ -20,7 +20,16 @@ def doctor_single(request, doctor_id):
         return JsonResponse({"name":doctor.name, "lastname":doctor.lastname, "age":doctor.age})
 
     elif request.method == "POST":
-        pass
+        print("post doctor")
+        try:
+            data = json.loads(request.body.decode("utf-8"))
+            doctor = Doctor.objects.create(name=data["name"], lastname=data["lastname"], age=data["age"])
+            doctor.save()
+            return JsonResponse({"status":"OK", "message":""})
+        except Exception as e:
+            print("wrong format!!!!!\n\n\n\n")
+            return JsonResponse({"status":"FAIL", "message":"wrong data format"})
+        
 
 @csrf_exempt
 def patient_single(request, patient_id):
@@ -94,7 +103,7 @@ def department_single(request, department_id):
 def patient(request):
     print("patient")
     if request.method == "GET":
-        pass
+        return JsonResponse({"asd":"asd"})
     elif request.method == "POST":
         print("post patient")
         try:
