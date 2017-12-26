@@ -49,16 +49,16 @@ class CheckboxDefinitionSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class ContentTypeSerializer(serializers.HyperlinkedModelSerializer):
-    checkboxes = CheckboxDefinitionSerializer(many=True)
-    dropdowns = DropdownDefinitionSerializer(many=True)
+    checkboxes = CheckboxDefinitionSerializer(many=True, required=False)
+    dropdowns = DropdownDefinitionSerializer(many=True, required=False)
     class Meta:
         model = ContentType
         fields = ("id", "name", "components", "component_names", "checkboxes", "dropdowns")
     
     def create(self, validated_data):
         print("CT", validated_data)
-        checkbox_data = validated_data.pop('checkboxes')
-        dropdown_data = validated_data.pop('dropdowns')
+        checkbox_data = validated_data.pop('checkboxes', [])
+        dropdown_data = validated_data.pop('dropdowns', [])
         ct = ContentType.objects.create(**validated_data)
         for checkbox in checkbox_data:
             print(checkbox)
