@@ -240,6 +240,7 @@ class GroupLogo(APIView):
                 name = "logo_%s_%s"%(str(group.id),urlparse(url).path.split('/')[-1])
                 content = urlopen(url)
                 group.logo_img.save(name, content, save=True)
+                return Response({"status": "OK"})
             except Exception as e:
                 return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
