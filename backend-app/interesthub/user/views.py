@@ -12,6 +12,8 @@ from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth.models import User, Group
 from content.serializers import ContentSerializer
 from interesthub.permissions import CanSeeUser, IsOwner
+from urllib.parse import urlparse
+from urllib.request import urlopen, urlretrieve, URLopener
 
 class UserViewSet(mixins.RetrieveModelMixin,mixins.UpdateModelMixin,viewsets.GenericViewSet):
     authentication_classes = (JSONWebTokenAuthentication, )
@@ -173,13 +175,27 @@ class MeView(APIView):
             profile = request.user.profile
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
-        try:
-            file = request.data['file']
-            file._set_name("photo_%s_%s"%(str(request.user.id),file._get_name()))
-            profile.photo = file
-            profile.save()
-        except KeyError:
-            return Response({"error": "Request has no resource file attached"}, status=status.HTTP_400_BAD_REQUEST)
-        return Response({"status": "OK"})
+        if 'file' in request.data:
+            try:
+                file = request.data['file']
+                file._set_name("photo_%s_%s"%(str(request.user.id),file._get_name()))
+                profile.photo = file
+                profile.save()
+                return Response({"status": "OK"})
+            except KeyError:
+                return Response({"error": "Request has no resource file attached"}, status=status.HTTP_400_BAD_REQUEST)
+
+        elif 'url' in request.data:
+            print("URL")
+            try:
+                url = request.data['url']
+                name = "photo_%s_%s"%(str(request.user.id),urlparse(url).path.split('/')[-1])
+                content = urlopen(url)
+                profile.photo.save(name, content, save=True)
+                return Response({"status": "OK"})
+            except Exception as e:
+                return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+        return Response({"error": "url or file field does not exist"})
 
 
