@@ -35,6 +35,17 @@ class InterestGroupSerializer(serializers.HyperlinkedModelSerializer):
         fields = ('id', 'name', 'is_public', 'description', 'tags', 'logo_img', 'cover_img', 'owner')
         read_only_fields = ('logo_img', 'cover_img',)
     
+    def to_representation(self, value):
+        resp = super(InterestGroupSerializer, self).to_representation(value)
+        try:
+            if self.context["request"].user in value.members.all():
+                resp["is_joined"] = True
+            else:
+                resp["is_joined"] = False
+        except Exception as e:
+            pass
+        return resp
+
     def to_internal_value(self, data):
         print(self.context["request"].user)
         if self.context["request"].user is None:
