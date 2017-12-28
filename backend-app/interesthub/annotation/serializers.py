@@ -4,4 +4,4 @@ from rest_framework import serializers
 class AnnotationSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Annotation
-        fields = ('id', 'data',)
+        fields = ('uri', 'data',)

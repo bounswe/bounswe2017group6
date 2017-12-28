@@ -69,9 +69,9 @@ urlpatterns = [
     url(r'^search/users/',SearchUser.as_view()),
     url(r'^search/contents/',SearchContent.as_view()),
 
-    url(r'^anootations/$',AnnotationCreate.as_view()),
-    url(r'^anootations/(?P<pk>[0-9]+)$',AnnotationUpdate.as_view()),
-    url(r'^anootations/search$',AnnotationSearch.as_view()),
+    url(r'^annotations/$',AnnotationCreate.as_view()),
+    url(r'^annotations/(?P<pk>[0-9]+)/$',AnnotationUpdate.as_view()),
+    url(r'^annotations/search/$',AnnotationSearch.as_view()),
     
 
     # url(r'^test/', TestView.as_view()),
