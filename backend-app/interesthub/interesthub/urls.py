@@ -22,6 +22,7 @@ from components.views import *
 from group.views import *
 from user.views import *
 from recommendation.views import *
+from annotation.views import *
 from rest_framework.urlpatterns import format_suffix_patterns
 from rest_framework_jwt.views import obtain_jwt_token
 from rest_framework.documentation import include_docs_urls
@@ -67,6 +68,10 @@ urlpatterns = [
     url(r'^search/groups/',SearchGroup.as_view()),
     url(r'^search/users/',SearchUser.as_view()),
     url(r'^search/contents/',SearchContent.as_view()),
+
+    url(r'^anootations/$',AnnotationCreate.as_view()),
+    url(r'^anootations/(?P<pk>[0-9]+)$',AnnotationUpdate.as_view()),
+    url(r'^anootations/search$',AnnotationSearch.as_view()),
     
 
     # url(r'^test/', TestView.as_view()),
