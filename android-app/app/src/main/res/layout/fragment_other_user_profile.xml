@@ -1,0 +1,105 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.cmpe451.interesthub.activities.OtherUserActivity">
+
+    <!-- TODO: Update blank fragment layout -->
+
+    <android.support.design.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:weightSum="4">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/profile_image"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    app:srcCompat="@mipmap/ic_launcher" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+
+                    <TextView
+                        android:id="@+id/user_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="left"
+                        android:layout_marginTop="10dp"
+                        android:textAlignment="center"
+                        android:textSize="19sp"
+                        android:textStyle="bold"
+                        />
+
+                    <TextView
+                        android:id="@+id/user_email"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="0.63"
+                        android:textAlignment="center"
+                        android:textSize="14sp"
+                        android:textStyle="italic" />
+
+                    <TextView
+                        android:id="@+id/user_desc"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="0.63"
+                        android:textAlignment="center" />
+
+                    <TextView
+                        android:id="@+id/user_interests"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="1.30"
+                        android:textAlignment="center" />
+
+                    <Button
+                        android:id="@+id/follow_button"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <android.support.design.widget.TabLayout
+
+                android:id="@+id/TabLayoutOtherProfile"
+                style="@style/Widget.Design.TabLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorWhite"
+                app:tabGravity="center" />
+
+            <android.support.v4.view.ViewPager
+                android:id="@+id/ViewPagerProfile"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/TabLayoutOtherProfile"
+
+                />
+
+        </LinearLayout>
+
+    </android.support.design.widget.CoordinatorLayout>
+
+</FrameLayout>

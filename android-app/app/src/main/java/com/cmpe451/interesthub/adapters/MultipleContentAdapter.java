@@ -34,6 +34,7 @@ import com.cmpe451.interesthub.models.SingleCheckboxItems;
 import com.cmpe451.interesthub.models.SingleDropdownItems;
 import com.cmpe451.interesthub.models.TypeData;
 import com.cmpe451.interesthub.models.UpDown;
+import com.cmpe451.interesthub.models.User;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.squareup.picasso.Picasso;
@@ -310,7 +311,9 @@ public class MultipleContentAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
 
         if(contentList.get(position).getComponents()!=null || contentList.get(position).getComponents().size()!=0 ){
+
             ((ViewHolder)holder).owner.setText(contentList.get(position).getOwner().getUsername()+" > " + contentList.get(position).getGroupName());
+            setProfilepic(((ViewHolder)holder).pic,contentList.get(position).getOwner().getId());
             long postDate = contentList.get(position).getCreatedDate().getTime();
             long now = Calendar.getInstance().getTimeInMillis();
             long different = now-postDate;
@@ -468,4 +471,24 @@ public class MultipleContentAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             return contentList.size();
 
         }
+    public void setProfilepic(final ImageView img , long id){
+        final String url ="http://34.209.230.231:8000/users/"+id+"/";
+        hub.getApiService().getSpesificUser(url).enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                if(response!=null && response.body()!=null){
+                    User user = response.body();
+                    Picasso.with(context)
+                            .load(user.getProfile().getPhoto())
+                            .resize(200, 200).into(img);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+
+            }
+        });
+
+    }
 }
