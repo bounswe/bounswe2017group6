@@ -58,6 +58,7 @@ class GroupContentList(APIView):
             content = Content.objects.get(pk=data["id"])
             if content in igroup.contents.all():
                 igroup.contents.remove(content)
+                content.delete()
                 return Response({"message": "content is removed from the group."})
             else:
                 return Response({"error": "content does not exist in this group."})
