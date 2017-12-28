@@ -64,6 +64,8 @@ def search_content(query, group=None, limit=5):
 
     contents = all_contents.filter(components__text__data__icontains=query)
     contents = contents.union(all_contents.filter(components__longtext__data__icontains=query))
+    contents = contents.union(all_contents.filter(components__checkbox__selecteds__title__icontains=query))
+    contents = contents.union(all_contents.filter(components__dropdown__selected__title__icontains=query))
     contents = contents.union(all_contents.filter(content_type__name__icontains=query))
     contents = contents.union(all_contents.filter(tags__label=query))
     contents = contents.union(all_contents.filter(tags__label__icontains=query))
