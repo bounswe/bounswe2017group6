@@ -141,7 +141,7 @@
          * Method for joining a group
          * @param {int} groupId the group will be joined
          */ 
-      }
+     
       function joinGroup(groupId){
           if($scope.group.is_public){
             $scope.joined = true;
@@ -261,6 +261,6 @@
       
       
       
-     
+      }
     	
 })();
