@@ -18,6 +18,7 @@
       console.log($scope.joined);
       checkJoined();
       $scope.joinGroup = joinGroup;
+	  $scope.checkJoined=checkJoined;
       $scope.leaveGroup = leaveGroup;
       console.log($routeParams.id);
     

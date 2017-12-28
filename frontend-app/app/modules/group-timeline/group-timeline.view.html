@@ -81,8 +81,8 @@
             <div class="divider"></div>
             <div class="row activity" ng-show="tab == 'timeline'" >                  
             <div class="col-md-8" >
-                <div ng-controller="PostCtrl">
-                    <div class="panel panel-info" style="margin-top:5%;" >
+                <div  ng-controller="PostCtrl">
+                    <div ng-show="joined" class="panel panel-info" style="margin-top:5%;" >
                      <uib-tabset active="active">
                       <!--uib-tab index="0" heading="Post">
                       <div class="panel-body">
