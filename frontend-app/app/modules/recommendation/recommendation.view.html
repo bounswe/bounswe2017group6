@@ -7,13 +7,37 @@
           
                 <div class="row" ng-repeat="group in suggestedGroups track by $index| limitTo: 9" ng-switch on = "$index %3">
                     <div class="col-md-4" ng-switch-when="0" ng-show="suggestedGroups[$index]">
-                        <a href="/group/{{suggestedGroups[$index].id}}" class="thumbnail"><img src="assets/user.png" title="{{suggestedGroups[$index].name}}" alt=""></a>
+                        <a href="/group/{{suggestedGroups[$index].id}}">
+                            <div ng-show="suggestedGroups[$index].logo_img" class="thumbnail">
+                              <img ng-src="{{suggestedGroups[$index].logo_img}}" title="{{suggestedGroups[$index].name}}" alt="" >
+                            </div>
+                             <div ng-show="suggestedGroups[$index].logo_img == null" class="thumbnail">
+                              <img ng-src="/assets/group.jpg" title="{{suggestedGroups[$index].name}}" alt="" >
+                            </div>
+                        </a>
                     </div>
                      <div class="col-md-4" ng-switch-when="0" ng-show="suggestedGroups[$index+1]">
-                        <a href="/group/{{suggestedGroups[$index+1].id}}" class="thumbnail"><img src="assets/user.png" title="{{suggestedGroups[$index+1].name}}" alt=""></a>
+                        <a href="/group/{{suggestedGroups[$index+1].id}}" >
+                            <div ng-show="suggestedGroups[$index+1].logo_img" class="thumbnail">
+                              <img ng-src="{{suggestedGroups[$index+1].logo_img}}" title="{{suggestedGroups[$index+1].name}}" alt="" >
+                            </div>
+                             <div ng-show="suggestedGroups[$index+1].logo_img == null" class="thumbnail">
+                              <img ng-src="/assets/group.jpg" title="{{suggestedGroups[$index+1].name}}" alt="" >
+                            </div>
+
+                        </a>
                     </div>
                      <div class="col-md-4" ng-switch-when="0" ng-show="suggestedGroups[$index+2]">
-                        <a href="/group/{{suggestedGroups[$index+2].id}}" class="thumbnail"><img src="assets/user.png" title="{{suggestedGroups[$index+2].name}}" alt=""></a>
+                        <a href="/group/{{suggestedGroups[$index+2].id}}" >
+
+                           <div ng-show="suggestedGroups[$index+2].logo_img" class="thumbnail">
+                              <img ng-src="{{suggestedGroups[$index+2].logo_img}}" title="{{suggestedGroups[$index+2].name}}" alt="" >
+                            </div>
+                             <div ng-show="suggestedGroups[$index+2].logo_img == null" class="thumbnail">
+                              <img ng-src="/assets/group.jpg" title="{{suggestedGroups[$index+2].name}}" alt="" >
+                            </div>
+
+                        </a>
                     </div>
                     
                 </div>
@@ -32,9 +56,35 @@
             <div class="panel-body">
               
                 <div class="row" ng-repeat="user in suggestedUsers track by $index | limitTo: 9" ng-switch on = "$index %3">
-                    <div class="col-md-4" ng-switch-when="0" ng-show="suggestedUsers[$index]"><a href="/user/{{suggestedUsers[$index].id}}" class="thumbnail"><img src="assets/user.png" title="{{suggestedUsers[$index].username}}" alt=""></a></div>
-                     <div class="col-md-4" ng-switch-when="0" ng-show="suggestedUsers[$index+1]"><a href="/user/{{suggestedUsers[$index+1].id}}" class="thumbnail"><img src="assets/user.png" title="{{suggestedUsers[$index+1].username}}" alt=""></a></div>
-                      <div class="col-md-4" ng-switch-when="0" ng-show="suggestedUsers[$index+2]"><a href="/user/{{suggestedUsers[$index+2].id}}" class="thumbnail"><img src="assets/user.png" title="{{suggestedUsers[$index+2].username}}" alt=""></a></div>
+                    <div class="col-md-4" ng-switch-when="0" ng-show="suggestedUsers[$index]"><a href="/user/{{suggestedUsers[$index].id}}" >
+                    <div ng-show="suggestedUsers[$index].profile.photo" class="thumbnail">
+                      <img ng-src="{{suggestedUsers[$index].profile.photo}}" title="{{suggestedUsers[$index].username}}" alt="" >
+                    </div>
+                     <div ng-show="suggestedUsers[$index].profile.photo==null" class="thumbnail">
+                      <img ng-src="/assets/user.jpg" title="{{suggestedUsers[$index].username}}" alt="">
+                    </div>
+
+                    </a></div>
+                     <div class="col-md-4" ng-switch-when="0" ng-show="suggestedUsers[$index+1]"><a href="/user/{{suggestedUsers[$index+1].id}}" >
+                       <div ng-show="suggestedUsers[$index+1].profile.photo" class="thumbnail">
+                      <img ng-src="{{suggestedUsers[$index+1].profile.photo}}" title="{{suggestedUsers[$index+1].username}}" alt="" >
+                    </div>
+                     <div ng-show="suggestedUsers[$index+1].profile.photo==null" class="thumbnail">
+                      <img ng-src="/assets/user.jpg" title="{{suggestedUsers[$index+1].username}}" alt="">
+                    </div>
+                      </a>
+                     </div>
+                      <div class="col-md-4" ng-switch-when="0" ng-show="suggestedUsers[$index+2]"><a href="/user/{{suggestedUsers[$index+2].id}}" >
+                         <div ng-show="suggestedUsers[$index+2].profile.photo" class="thumbnail">
+                      <img ng-src="{{suggestedUsers[$index+2].profile.photo}}" title="{{suggestedUsers[$index+2].username}}" alt="" >
+                    </div>
+                     <div ng-show="suggestedUsers[$index+2].profile.photo==null" class="thumbnail">
+                      <img ng-src="/assets/user.jpg" title="{{suggestedUsers[$index+2].username}}" alt="">
+                    </div>
+
+                     
+
+                      </a></div>
                   
                 </div>
               

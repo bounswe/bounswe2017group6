@@ -47,6 +47,7 @@
                  controller: 'GroupTimelineCtrl',
                  requireAuth: true                 
              })
+
              .when('/search/:q', {
                 templateUrl: 'modules/search/search.view.html',
                 controller: 'SearchCtrl',
@@ -101,7 +102,13 @@
         .when('/allgroups', {
                 templateUrl: 'modules/listgroups/listgroups.view.html',
                 controller: 'ListGroupsCtrl',
-                //equireAuth: true                  
+                requireAuth: true                  
+            })
+
+            .when('/group/:id/search/:q', {
+                templateUrl: 'modules/search/groupsearch.view.html',
+                controller: 'SearchCtrl',
+                requireAuth: true                  
             });
 /*
               .otherwise({

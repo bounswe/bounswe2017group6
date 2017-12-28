@@ -12,7 +12,7 @@
         .module("interestHub")
         .controller("ContentCtrl", ContentCtrl);
     
-    function ContentCtrl($scope,  $rootScope, $location, ContentService, GroupService, $q, $filter)
+    function ContentCtrl($scope,  $rootScope, $location, ContentService, GroupService, $q, $filter, UserService)
     {
         $scope.remove = remove;
         $scope.update = update;
@@ -132,9 +132,22 @@
                                     post.group = response.data;
                                 };
                             },handleError);
+                          UserService.getUser(post.owner.id)
+                        .then(function(response){
+                            post.owner = response.data;
+                        },handleError);
                     ContentService.getCommentsOfContent(post.id)
                             .then(function (response) {
                                 post.comments = $filter('orderBy')(response.data,'+created_date');
+
+                                $q.all(post.comments.map(function (comment) {
+                                     UserService.getUser(comment.owner.id)
+                                        .then(function(response){
+                                            comment.owner = response.data;
+                                        },handleError);
+        
+                                })).then(function () {
+                                }); 
                             },handleError);
                     ContentService.getVotesOfContent(post.id)
                             .then(function (response) {

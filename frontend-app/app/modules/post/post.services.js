@@ -99,14 +99,24 @@
          * @param {int} postID the id of post
          * @returns {httpPromise} resolve with fetched data.
          */ 
-        function deletePost(groupId,postID){
-            return $http.delete('https://limitless-sands-55256.herokuapp.com/http://34.209.230.231:8000/group/'+groupId+'/contents/'+postID,{
+        function deletePost(groupId,post){
+            return $http({  
+				method: "DELETE",  
+				url: "https://limitless-sands-55256.herokuapp.com/http://34.209.230.231:8000/group/" +groupId + "/contents/",  
+				data: post,  
+				headers: {'Content-Type': 'application/json', Authorization: "Bearer " + $localStorage.token }  
+			});
+			
+			
+			
+			/*
+			$http.delete('https://limitless-sands-55256.herokuapp.com/http://34.209.230.231:8000/group/'+groupId+'/contents/',post,{
                 headers: {
                     'Content-Type' : 'application/json',
                     'Authorization': 'Bearer ' + $localStorage.token
 
                 }
-            });
+            });*/
         }
         /**
          * @ngdoc

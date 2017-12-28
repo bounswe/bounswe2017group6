@@ -563,7 +563,6 @@ border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
     width: 10px;
     height: 10px;
     border: 2px solid #fff;
-    border-radius: 100%
 }
 
 .avatar img {
@@ -571,7 +570,6 @@ border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
     max-width: 100%;
     height: auto;
     border: 0 none;
-    border-radius: 1000px
 }
 
 .avatar-online i {

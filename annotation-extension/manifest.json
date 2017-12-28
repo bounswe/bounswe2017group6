@@ -1,0 +1,26 @@
+{
+    "name": "Annotation Extensions",
+    "description" : "Annotate any text!",
+    "version": "1.0",
+    "manifest_version": 2,
+    "browser_action": {
+        "default_popup": "popup.html",
+        "default_icon": "icon.png"
+    },
+    "content_scripts": [
+        {
+            "js": ["jquery/jquery-3.2.1.min.js","annotator-full.1.2.7/annotator-full.min.js","annotate.js"],
+            "matches": ["<all_urls>"],
+            "css": ["annotator-full.1.2.7/annotator.min.css"]
+        }
+    ],
+    "background":
+    {
+        "scripts": ["jquery/jquery-3.2.1.min.js","annotator-full.1.2.7/annotator-full.min.js"]
+    },
+    "permissions": [
+        "activeTab",
+        "storage",
+        "tabs"
+    ]
+  }

@@ -65,8 +65,22 @@
             members = [];   
             GroupService.getMembers($routeParams.id)
                     .then(function(response){
-                        $scope.members = response.data;             
+                        members = response.data;             
                         console.log($scope.members);
+                        $q.all(members.map(function (member) {
+                          UserService.getUser(member.id)
+                              .then(
+                                  function(response){
+                                      if(response.status != 404){
+                                          member = response.data;
+                                          console.log(member);
+                                      };
+                                           $scope.members.push(member);
+                                  },handleError);
+                     
+            
+                })).then(function () {
+                });
               },handleError);
 
                    

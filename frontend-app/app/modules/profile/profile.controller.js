@@ -104,6 +104,14 @@
                         ContentService.getCommentsOfContent(post.id)
                                 .then(function (response) {
                                     post.comments = response.data;
+                                     $q.all(post.comments.map(function (comment) {
+                                        UserService.getUser(comment.owner.id)
+                                            .then(function(response){
+                                                comment.owner = response.data;
+                                            },handleError);
+        
+                                        })).then(function () {
+                                        }); 
                                 },handleError);
                         ContentService.getVotesOfContent(post.id)
                                 .then(function (response) {
@@ -129,7 +137,18 @@
            
             UserService.getFollowings($scope.user.id)
                 .then(function(response){
-                    $scope.followings = response.data;
+                    followings = response.data;
+
+                     $q.all(followings.map(function (following) {
+                         UserService.getUser(following.id)
+                            .then(function(response){
+                                following = response.data;
+                                 $scope.followings.push(following);
+                            },handleError);
+                           
+                    })).then(function () {
+                    }); 
+
                     if($localStorage.user.id != $scope.user.id){
                         UserService.getFollowingsOfCurrent()
                             .then(function(response){
@@ -150,7 +169,18 @@
                 },handleError);
             UserService.getFollowers($scope.user.id)
                 .then(function(response){
-                    $scope.followers = response.data;
+                    followers = response.data;
+                     $q.all(followers.map(function (follower) {
+                         UserService.getUser(follower.id)
+                            .then(function(response){
+                                console.log(response.data);
+                                follower = response.data;
+                                 $scope.followers.push(follower);
+                            },handleError);
+
+                           
+                    })).then(function () {
+                    }); 
                 });     
 
         }

@@ -31,10 +31,10 @@
         .controller("PostCtrl", PostCtrl);
 		
 		
-    function PostCtrl($scope,  $rootScope, $location, PostService, $routeParams, TemplateService, $q,ContentService,TagService)
+    function PostCtrl($scope,  $rootScope, $location, PostService, $routeParams, TemplateService, $q,ContentService,TagService,UserService)
 
-    {    
-
+    {                                                                                                                                          
+	
         //$scope.createPost = createPost;
         $scope.remove = remove;
         $scope.update = update;
@@ -45,6 +45,9 @@
 		$scope.upVote = upVote;
         $scope.downVote = downVote;
         $scope.postComment = postComment;
+		$scope.checksth=checksth;
+		$scope.drInit=drInit;
+		$scope.chInit=chInit;
 		
 		
 		
@@ -63,8 +66,8 @@
          * 
          */ 
         function init() {
-       
-
+			
+			
             PostService
                 .getAllPosts($routeParams.id)
                 .then(handleSuccess, handleError);
@@ -75,6 +78,39 @@
         }
         
         init();
+		getUser();
+		$scope.user={};
+		
+		function checksth(index,comp_name){
+			
+			console.log(index)
+			console.log(comp_name)
+			console.log($scope.content)
+		}
+		function drInit(postIndex,comIndex,post){
+			console.log("dropdown "+comIndex+" "+postIndex)
+			
+			console.log(post);
+		}
+		function chInit(postIndex,comIndex,post){
+			console.log("checkbox "+comIndex+" "+postIndex)
+		}
+		
+		/**
+         * @ngdoc
+         * @name getUser
+         * @methodOf PostCtrl
+         *
+         * @description
+         * Method for getting the logged in user
+         */ 
+		function getUser(){
+        UserService.getLoggedInUser().then(function(response){
+          console.log(response.data);
+           $scope.user=response.data;  
+        },handleError);
+       
+      }
 		
     
 /*  
@@ -91,11 +127,20 @@
          * Method for removing content of group
          * @param {object} content the content will be deleted
          */ 
-        function remove(post)
+        function remove(post_id)
         {
+			tobeDeleted={id:post_id};
+			console.log(tobeDeleted);
+			
             PostService
-                .deletePost(post._id)
-                .then(handleSuccess, handleError);
+                .deletePost($routeParams.id,tobeDeleted)
+                .then(console.log("Deleted"), handleError);
+				
+			for(i=0;i<$scope.posts.length;i++){
+				if($scope.posts[i].id==post_id){
+					$scope.posts.splice(i,1);
+				}
+			}
         }
         /**
          * @ngdoc
@@ -153,29 +198,75 @@
 					$scope.con_type=angular.copy($scope.templates[i]);
 				}
 			}
+			console.log($scope.con_type);
+			var x=1;
 			for(i=0;i<$scope.con_type.components.length;i++){
-				temp= {
-                "component_type": $scope.con_type.components[i],
-                "order": i+1,
-                "type_data": {
-                    "data": content.comps[$scope.con_type.component_names[i]]
-					}	
-				
+				if($scope.con_type.components[i]=="dropdown"){
+					console.log(content.comps[$scope.con_type.component_names[i]])
+					temp= {
+					"component_type": $scope.con_type.components[i],
+					"order": i+1,
+					"type_data": {
+						"data": "ddown",
+						"selected":content.comps[$scope.con_type.component_names[i]].selected[0].id
+						}	
+					
+					}
+					$scope.req.components.push(temp);
 				}
-				$scope.req.components.push(temp);
+				else if($scope.con_type.components[i]=="checkbox"){
+					var x={};
+					var sels=[];
+					for(j=0;j<$scope.con_type.checkboxes.length;j++){
+								if($scope.con_type.checkboxes[j].name==$scope.con_type.component_names[i]){
+									console.log("hello")
+									x=$scope.con_type.checkboxes[j];
+								}
+							}
+					sels=[];
+					var result = "";
+					  $.each(content.comps[$scope.con_type.component_names[i]].selected, function(k, v) {
+						result += k + " , " + v + "\n";
+						if(v==true){
+							sels.push(x.items[parseInt(k)].id);
+						}
+					  }); 
+					
+					
+					
+					temp= {
+					"component_type": $scope.con_type.components[i],
+					"order": i+1,
+					"type_data": {
+						"data": "cbox",
+						"selecteds":sels
+						}	
+					
+					}
+					$scope.req.components.push(temp);
+				}
+				else{
+					temp= {
+					"component_type": $scope.con_type.components[i],
+					"order": i+1,
+					"type_data": {
+						"data": content.comps[$scope.con_type.component_names[i]]
+						}	
+					
+					}
+					$scope.req.components.push(temp);
+				}
 			}
 			
 			//$scope.req.content_type=$scope.con_type;
 			
 			console.log($scope.req)
-			
+			//console.log($scope.content)
 	
-			
             PostService
                 .createPost($routeParams.id, $scope.req)
                 .then(handleSuccessPost, handleError);
-				
-            $scope.content={content_type_id:$scope.content.content_type_id,tags:[],comps:[]};
+			$scope.content={content_type_id:$scope.content.content_type_id,tags:[],comps:[]};
 
             
         }
@@ -193,10 +284,22 @@
             $scope.posts = [];
             posts = response.data;
                         $q.all(posts.map(function (post) {
-                   
+                   UserService.getUser(post.owner.id)
+                        .then(function(response){
+                            post.owner = response.data;
+                        },handleError);
                     ContentService.getCommentsOfContent(post.id)
                             .then(function (response) {
                                 post.comments = response.data;
+                                 $q.all(post.comments.map(function (comment) {
+                                     UserService.getUser(comment.owner.id)
+                                        .then(function(response){
+                                            comment.owner = response.data;
+                                        },handleError);
+        
+                                })).then(function () {
+                                }); 
+
                             },handleError);
                     ContentService.getVotesOfContent(post.id)
                             .then(function (response) {
@@ -273,6 +376,15 @@
 
         }
 		$scope.content={content_type_id:'',tags:[],comps:[]};
+		 /**
+         * @ngdoc
+         * @name typeSelect
+         * @methodOf PostCtrl
+         *
+         * @description
+         * Method for selecting the content type that user will use to create content
+         * @param {object} type_id id of the template to be used for creating contents
+         */
 		function typeSelect(type_id){
 			$scope.content={content_type_id:'',tags:[],comps:[]};
 			$scope.content.content_type_id=type_id;
@@ -454,6 +566,25 @@
 			console.log(response);
 			$scope.templates.push(response);
 		});
+		
+		$scope.removeTemplate=function(){
+			  tobeDeleted={id:$scope.content.content_type_id}
+			  console.log(tobeDeleted)
+			  console.log($scope.templates);
+			  for(i=0;i<$scope.templates.length;i++){
+				  console.log(i)
+				  if($scope.content.content_type_id==$scope.templates[i].id){
+					  console.log("hello");
+					 $scope.templates.splice(i,1);
+				  }
+			  }
+			  
+			  console.log($scope.templates);
+			 
+			  TemplateService
+		                .deleteTemplate($routeParams.id, tobeDeleted)
+		                .then(console.log("temp deleted"), handleError);
+		  };
 		
 		$scope.files = [];
 

@@ -8,8 +8,8 @@
                 <div class="inner-all" >
                     <ul class="list-unstyled">
                         <li class="text-center">
-
-                            <img data-no-retina="" class="img-rounded img-responsive img-bordered-primary" ng-src= "http://34.209.230.231:8000/{{user.profile.photo}}">
+                            
+                            <img data-no-retina="" class="img-rounded img-responsive img-bordered-primary" ng-src= "{{user.profile.photo}}">
                         </li>
                         <li class="text-center">
                             <h4 class="text-capitalize">{{user.profile.name}} {{user.profile.lastname}}</h4>
@@ -121,7 +121,13 @@
              
                    <div class="panel panel-info" ng-repeat="post in posts " ng-init="postIndex = $index">
                         <div class="panel-heading">
-                            <img src="https://bootdey.com/img/Content/avatar/avatar1.png" class="img-rounded">
+                             <div ng-show="user.profile.photo==null">
+                                  <img ng-src="/assets/user.jpg" class="img-rounded">
+                            </div>
+                             <div ng-show="user.profile.photo">
+                                  <img ng-src="{{user.profile.photo}}" class="img-rounded">
+                            </div>
+                           
                             <div class="pull-right text-right">
                                 <i class="fa fa-calendar"></i><br> {{post.created_date | limitTo:10}}
                             </div>
@@ -198,8 +204,9 @@
                             </div>
                             
                             <div class="media" ng-repeat="comment in post.comments">
+
                                 <a class="pull-left" ng-href="/user/{{comment.owner.id}}">
-                                    <img class="media-object img-rounded" ng-src="https://bootdey.com/img/Content/avatar/avatar2.png">
+                                    <img class="media-object img-rounded" ng-src="{{comment.owner.profile.photo}}">
                                 </a>
                                 <div class="media-body">
                                     <div class="pull-right small">{{comment.created_date | date:'dd/MM/yyyy HH:mm'}}</div>
@@ -522,19 +529,15 @@
      <div class="row activity" ng-show="tab == 'follower'">
         <div class="col-md-12" >
                   <div class="panel" id="followers">
-                    <div class="panel-heading">
-                      <h3 class="panel-title">
-                        <i class="icon md-check" aria-hidden="true"></i> Followers
-                      </h3>
-                    </div>
+                   
                     <div class="panel-body">
                       <ul class="list-group list-group-dividered list-group-full">
                         <li class="list-group-item" ng-repeat="follower in followers">
                           <div class="media">
                             <div class="media-left">
                               <a class="avatar avatar-lg" href="javascript:void(0)">
-                                <img src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="">
-                                <i></i>
+                                <img ng-src="{{follower.profile.photo}}" class="img-rounded">
+                            
                               </a>
                             </div>
                             
@@ -543,7 +546,7 @@
                                 <button type="button" ng-if="!follower.isFollowed" class="btn btn-info btn-sm waves-effect waves-light">Follow</button>
                                 <button type="button" ng-if="follower.isFollowed" class="btn btn-warning btn-sm waves-effect waves-light">Unfollow</button>
                               </div>-->
-                              <div><h4><a class="name" href="/user/{{follower.id}}">{{follower.name}}{{follower.username}}</a></h4></div>
+                              <div><h4><a class="name" href="/user/{{follower.id}}">{{follower.username}}</a></h4></div>
                               <small>Follows you</small>
                             </div>
                           </div>
@@ -568,8 +571,9 @@
                           <div class="media">
                             <div class="media-left">
                               <a class="avatar avatar-lg " href="javascript:void(0)">
-                                <img src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="">
-                                <i></i>
+                                <img ng-src="{{following.profile.photo}}" class="img-rounded">
+
+                        
                               </a>
                             </div>
                             <div class="media-body">

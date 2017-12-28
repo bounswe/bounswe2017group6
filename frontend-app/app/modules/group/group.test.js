@@ -50,25 +50,25 @@ describe('GroupService', function() {
 	  it('createGroup',function(){
 	  	
 	  	
-		  var groupData = {};
+		var groupData = {};
 		LoginService.getToken(registeredUser).then(function(resp){
 	  		//console.log(resp.data);
 	  		httpBackend.expectPOST("https://limitless-sands-55256.herokuapp.com/http://34.209.230.231:8000/groups/",groups[0]).respond(createdGroup);
-	  	var returnedPromise = GroupService.createGroup(groups[0]);
+	  		var returnedPromise = GroupService.createGroup(groups[0]);
 
-	  	var result;
-	  	returnedPromise.then(function(response){
-			  result = response.data;
-		  });
-		  console.log("Result ",result.id);			  		  
-		  console.log("CreatedGroup ",createdGroup.id);
-		  httpBackend.flush();
+	  		var result;
+	  		returnedPromise.then(function(response){
+			  	result = response.data;
+		  	});
+		  	console.log("Result ",result.id);			  		  
+		  	console.log("CreatedGroup ",createdGroup.id);
+		  	httpBackend.flush();
 
 
 
-	  	expect(result.id).toEqual(createdGroup.id);
-		expect(result.name).toEqual(createdGroup.name);
-		expect(result.tags[0].id).toEqual(createdGroup.tags[0].id);
+	  		expect(result.id).toEqual(createdGroup.id);
+			expect(result.name).toEqual(createdGroup.name);
+			expect(result.tags[0].id).toEqual(createdGroup.tags[0].id);
 
 		},function(resp){
 	  		//console.log(resp);

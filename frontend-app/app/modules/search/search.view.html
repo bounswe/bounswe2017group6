@@ -17,12 +17,12 @@
         		
 		        <section class="search-result-item" ng-repeat="group in groups | limitTo: 10">
 		        	
-		        	<div ng-switch on="group.image == null || group.image == ''">
-		        		<div ng-switch-when="video.large">
-					        <a class="image-link" href="#"><img class="image" ng-src="https://www.noblehour.com/public/layouts/images/group-default-logo.png"></a>
+		        	<div ng-switch on="group.logo_img == null">
+		        		<div ng-switch-when="group.logo_img == null">
+					        <a class="image-link" ><img class="image" ng-src="/assests/group.jpg"></a>
 					    </div>
 					    <div ng-switch-default>
-					        <a class="image-link" href="#"><img class="image" ng-src="{{group.image}}"></a>
+					        <a class="image-link" href="#"><img class="image" ng-src="{{group.logo_img}}"></a>
 					    </div>
 		        	
 		            </div>
@@ -35,7 +35,7 @@
 		                       
 		                    </div>
 		                    <div class="col-sm-3 text-align-center">
-		                        <a class="btn btn-primary btn-info btn-sm" ng-href="#">Join</a>
+		                        <!--<a class="btn btn-primary btn-info btn-sm" ng-href="#">Join</a>-->
 		                    </div>
 		                </div>
 		            </div>
@@ -60,7 +60,9 @@
 		        	<div ng-switch on="user.profile.photo != null ">
 		        		
 					    <div ng-switch-default>
-					        <a class="image-link" href="#"><img class="image" ng-src="{{user.profile.photo}}"></a>
+					        <a class="image-link" href="#">
+					        	<img class="image" ng-src="{{user.profile.photo}}">
+					        </a>
 					    </div>
 		        	
 		            </div>
@@ -69,11 +71,12 @@
 		                    <div class="col-sm-9">
 		                        <h4 class="search-result-item-heading"><a ng-href="/user/{{user.id}}"> 		            {{user.profile.name}} {{user.profile.lastname}}
  								</a></h4>
+
 		                        <!--<p class="info">New York</p>-->
 		                       
 		                    </div>
 		                    <div class="col-sm-3 text-align-center">
-		                        <a class="btn btn-primary btn-info btn-sm" ng-href="#">Follow</a>
+		                        <!--<a class="btn btn-primary btn-info btn-sm" ng-href="#">Follow</a>-->
 		                    </div>
 		                </div>
 		            </div>
@@ -89,20 +92,197 @@
 		                </div>
 
         		</section>
-		        </div>
+				</div>
+				
+				<div ng-show="contentSec==true">
+						<h4>Contents</h4>
+					 
+						 <section class="search-result-item"  ng-repeat="post in searchedContents | limitTo: 10"  ng-init="postIndex = $index">
+		 
+							
+							 <div>
+								 <div class="row">
+										<div >
+												<div class="panel panel-info" >
+													 <div class="panel-heading">
+														 <img src="https://bootdey.com/img/Content/avatar/avatar1.png" class="img-rounded">
+														 <div class="pull-right text-right">
+															 <i class="fa fa-calendar"></i><br> {{post.created_date | date:'dd/MM/yyyy HH:mm'}}
+														 </div>
+														 <div><strong><a ng-href="/user/{{post.owner.id}}">{{post.owner.username}}</a></strong></div>
+														 <!--<div class="small"><i class="fa fa-map-marker"></i> Medellin, Colombia</div>-->
+													 </div>
+													 <div class="panel-body" >
+							 
+															 <div id="components" class="col-lg-12 col-md-12 col-sm-12" ng-repeat="component in post.content_type.components track by $index " ng-init="comIndex= $index">
+							 
+																 <div  ng-if="component=='text'">
+							 
+																	 <div class="col-lg-3 col-md-3 col-sm-4" ng-show="post.content_type.component_names[comIndex]">
+																		 <strong><label>{{post.content_type.component_names[comIndex]}}:</label></strong>
+																	 </div>
+																		 {{post.components[comIndex].type_data.data}} 
+																		
+																	 
+																 </div>
+																 <div ng-if="component=='longtext'">
+																	 <div class="col-lg-3 col-md-3 col-sm-4" ng-show="post.content_type.component_names[comIndex]">
+																		 <strong><label>{{post.content_type.component_names[comIndex]}}:</label></strong>
+																	 </div>
+																		 {{post.components[comIndex].type_data.data}} 
+																 </div>
+																 <div ng-if="component=='number'">
+																	 <div class="col-lg-3 col-md-3 col-sm-4" ng-show="post.content_type.component_names[comIndex]">
+																		 <strong><label>{{post.content_type.component_names[comIndex]}}:</label></strong>
+																	 </div>
+																	 
+																		 {{post.components[comIndex].type_data.data | number : 2}}
+																		
+																 </div>
+																 <div ng-if="component=='datetime'">                                        
+																	 <div class="col-lg-3 col-md-3 col-sm-4" ng-show="post.content_type.component_names[comIndex]">
+							 
+																	 
+																		 <strong><label>{{post.content_type.component_names[comIndex]}}:</label></strong>
+																	 </div>
+							 
+																		 {{post.components[comIndex].type_data.data}} 
+																 </div>
+																 <div ng-if="component=='video'">
+																	 <div class="col-lg-3 col-md-3 col-sm-4" ng-show="post.content_type.component_names[comIndex]">
+							 
+																		 <strong><label>{{post.content_type.component_names[comIndex]}}</label></strong>:
+																	 </div>
+																		 <a ng-href="{{post.components[comIndex].type_data.data}}">{{post.components[comIndex].type_data.data}}</a> 
+																 </div>
+																 <div ng-if="component=='image'">
+																	 <div class="col-lg-3 col-md-3 col-sm-4" ng-show="post.content_type.component_names[comIndex]">
+																		 <strong><label>{{post.content_type.component_names[comIndex]}}</label></strong>
+																	 </div>
+																		 <img ng-src="{{post.components[comIndex].type_data.data}}"></p> 
+																 </div>
+																 <div ng-if="component=='dropdown'">
+																	  <p>
+																		 <strong><label>{{post.content_type.component_names[comIndex]}}</label></strong>:
+																		 {{post.components[comIndex].type_data.data}} 
+																	 </p>
+																 </div>
+																 <div ng-if="component=='radiobutton'">
+																	  <p>
+																		 <strong><label>{{post.content_type.component_names[comIndex]}}</label></strong>:
+																		 {{post.components[comIndex].type_data.data}} 
+																	 </p>
+																 </div>      
+															 </div>
+															 <br></br>
+															 <div ng-show="post.tags.length != 0">
+							 
+																 <strong><label>Tags</label></strong>:
+																 <div class="clearfix"></div>
+																 <div class="col-sm-12">
+																	 <div ng-repeat="tag in post.tags track by $index" ng-switch on="$index % 1">
+																		 <div class="col-sm-2 interest" ng-switch-when="0" ng-hide="tag == null">
+																			  <a ng-href="{{tag.url}}" data-toggle="tooltip" data-placement="right" title="{{tag.description}}" >#{{tag.label}}</a>
+																				
+																		 </div>
+																		 
+							 
+																		
+																	 </div>
+																 </div>
+															 </div>
+														 <!-- <div class="actions">
+															 <div class="btn-group">
+																	 <button type="button" class="btn btn-link" ng-click="upVote(postIndex, post.id)"><i class="fa fa-thumbs-o-up"></i><span class="badge">{{post.likes}}</span></button>
+																	 <button type="button" class="btn btn-link" ng-click="downVote(postIndex, post.id)"><i class="fa fa-thumbs-o-down"></i><span class="badge">{{post.dislikes}}</span> </button>
+															 </div>
+														 </div> -->
+														 
+
+														 
+														 <div class="media" ng-repeat="comment in post.comments">
+															 <a class="pull-left" ng-href="/user/{{comment.owner.id}}">
+																 <img class="media-object img-rounded" ng-src="https://bootdey.com/img/Content/avatar/avatar2.png">
+															 </a>
+															 <div class="media-body">
+																 <div class="pull-right small">{{comment.created_date | date:'dd/MM/yyyy HH:mm'}}</div>
+																 <!--<h4 class="media-heading">Media heading</h4>-->
+																 <label>{{comment.owner.username}}</label><p>{{comment.text}}</p>
+																 
+															 </div>
+														 </div>
+													  
+														 
+													 </div>
+													 <!-- <div class="panel-footer">
+														 <input class="form-control" ng-model="newcomment" ng-keyup="$event.keyCode == 13 && postComment(newcomment,postIndex, post.id)" placeholder="Write a comment...">
+													 </div> -->
+
+												 </div>
+											 </div>
+
+											 <!-- <strong><a href="/group/{{post.groups[postIndex]}}">{{post.groups}}</a></strong> -->
+								 </div>
+							 </div>
+							 <div class="col-sm-3 text-align-center">
+									<a class="btn btn-primary btn-info btn-sm" ng-href="/group/{{post.groups[postIndex]}}">See the post in the group</a>
+								</div>
+						 </section>
+							<section ng-if="searchedContents.length==0" class="search-result-item">
+							 <div class="row">
+									 <div class="col-sm-9">
+										 <h4 class="search-result-item-heading">No result found for contents</h4>
+										 
+										
+									 </div>
+									 
+								 </div>
+		 
+						 </section>
+						 </div>
 		       
-	        
+				<!-- <div ng-show="contentSec==true">
+					<h4>Contents</h4>
+				 
+					<section class="search-result-item" ng-repeat="content in searchedContents | limitTo: 10">
+		        	
+						<div class="search-result-item-body">
+							<div class="row">
 
 
-	        </div>
+
+
+
+							</div>
+						</div>
+						
+
+					</section>
+						<section ng-if="searchedContents.length==0" class="search-result-item">
+						 <div class="row">
+								 <div class="col-sm-9">
+									 <h4 class="search-result-item-heading">No result found for contents</h4>
+									 
+									
+								 </div>
+								 
+							 </div>
+	 
+					 </section>
+					 </div> -->
+
+
+			</div>
 	         <div class="col-md-3">
 		        <h4>Results <span class="fw-semi-bold">Filtering</span></h4>
 		        <p class="text-muted fs-mini">Listed content is categorized by the following groups:</p>
 		        <ul class="nav nav-pills nav-stacked search-result-categories mt">
-		            <li><a ng-click="groupSec = false; peopleSec = true;">People <!--<span class="badge">34--></span></a>
-		            </li>
-		            <li><a ng-click="peopleSec = false; groupSec = true;">Groups</a>
-		            </li>
+		          <li><a ng-click="groupSec = false; peopleSec = true; contentSec = false;">People <!--<span class="badge">34--></span></a>
+			 </li>
+		            <li><a ng-click="peopleSec = false; groupSec = true; contentSec = false;">Groups</a>
+			</li>
+			<li><a ng-click=" peopleSec = false; contentSec = true; groupSec = false;">Contents</a>
+			</li>
 		            
 		           
 		        </ul>

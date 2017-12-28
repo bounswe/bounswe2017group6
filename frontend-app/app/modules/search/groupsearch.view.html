@@ -1,0 +1,348 @@
+<div ng-controller="GroupTimelineCtrl" class="container bootstrap snippets">
+    
+        <div class="row background-container" style="margin-top: 60px;">
+            <div class="col-lg-3 col-md-3 col-sm-4" ng-controller="GroupCtrl">
+                <div class="panel rounded shadow">
+                <div class="panel-body">
+                    <div class="inner-all" >
+                        <ul class="list-unstyled">
+                           
+                            <li>
+                                <div class="col-md-12" style="margin-top:20px;">
+                                    <h4 class="text-capitalize text-center"><strong>{{group.name}}</strong></h4>
+                                </div>
+    
+                                <div class="text-center">
+                                     <img data-no-retina="" class="img-rounded img-responsive img-bordered-primary" ng-src= "http://34.209.230.231:8000/{{group.logo_img}}" style="width: auto; height: auto;max-width: 160x;max-height: 160px;">
+                                   
+                                    
+                                </div>  
+                                <div class=row>
+                            
+                                
+                                                                               
+                                </div>
+                            </li>
+                            <hr/>
+                            <li>
+                                <p></p>
+                                <p>{{group.description}}</p>
+                            </li>
+                            <li>
+                                <a ng-show="!joined" ng-click="joinGroup(group.id)" class="btn btn-info text-center btn-block">Join</a>
+                                <a ng-show="joined" ng-click="leaveGroup(group.id)" class="btn btn-success text-center btn-block">Joined</a>
+    
+    
+                            </li>
+     
+                        </ul>
+                    </div>
+                </div>
+                </div>
+                <div ng-include src='"modules/group/grouppanel.view.html"' ng-controller='GroupCtrl'></div>
+        
+    
+        
+            </div>
+           
+            <div class="col-lg-9 col-md-9 col-sm-8">
+        
+        
+            <div class="row activity">
+        
+                       
+                <div class="col-md-12" >
+                        <div class="profile-cover">
+                                <div class="cover rounded shadow no-overflow">
+                                    <div class="inner-cover">
+    
+                                        <div class="btn-group cover-menu-mobile hidden-lg hidden-md">
+                                            <button type="button" class="btn btn-theme btn-sm dropdown-toggle" data-toggle="dropdown">
+                                                <i class="fa fa-bars"></i>
+                                            </button>
+                                            <ul class="dropdown-menu pull-right no-border" role="menu">
+                                                <li class="active"><a href="#"><i class="fa fa-fw fa-clock-o"></i> <span>Timeline</span></a></li>
+                                                <li><a href="#"><i class="fa fa-fw fa-user"></i> <span>About</span></a></li>
+                                     
+                                            </ul>
+                                        </div>
+                                        <img  ng-src="http://34.209.230.231:8000/{{group.logo_img}}" class="img-responsive full-width" alt="cover" style="max-height:200px;">
+                                    </div>
+                                    <ul class="list-unstyled no-padding hidden-sm hidden-xs cover-menu" ng-init="tab='timeline'">
+                                        <li  ng-click="tab = 'timeline'" ng-class="{'active': tab == 'timeline'}"><a href="#"><i class="fa fa-fw fa-clock-o"></i> <span>Timeline</span></a></li>
+                                        <li ng-click="tab = 'about'" ng-class="{'active': tab == 'about'}" ><a href="#"><i class="fa fa-fw fa-user"></i> <span>About</span></a></li>
+                                    
+                        
+                                        
+                                    </ul>
+                                </div><!-- /.cover -->
+                            </div><!-- /.profile-cover -->
+                </div>
+                <div class="divider"></div>
+                <div class="row activity" ng-show="tab == 'timeline'" >                  
+ 
+                          
+    
+    
+    
+    <div class="col-md-8" ng-controller="SearchCtrl" >
+                       <div class="panel panel-info" ng-repeat="post in searchedGroupContents " ng-init="postIndex = $index">
+                            <div class="panel-heading">
+                                <img src="https://bootdey.com/img/Content/avatar/avatar1.png" class="img-rounded">
+                                <div class="pull-right text-right">
+                                    <i class="fa fa-calendar"></i><br> {{post.created_date | limitTo:10}}
+                                </div>
+                                <div><strong>{{post.owner.username}}</strong></div>
+                                <!--<div class="small"><i class="fa fa-map-marker"></i> Medellin, Colombia</div>-->
+                            </div>
+                            <div class="panel-body">
+    
+                                    <div id="components" class="col-lg-12 col-md-12 col-sm-12" ng-repeat="component in post.content_type.components track by $index " ng-init="comIndex= $index">
+    
+                                        <div  ng-if="component=='text'">
+    
+                                            <div class="col-lg-3 col-md-3 col-sm-4" ng-show="post.content_type.component_names[comIndex]">
+                                                <strong><label>{{post.content_type.component_names[comIndex]}}:</label></strong>
+                                            </div>
+                                                {{post.components[comIndex].type_data.data}} 
+                                               
+                                            
+                                        </div>
+                                        <div ng-if="component=='longtext'">
+                                            <div class="col-lg-3 col-md-3 col-sm-4" ng-show="post.content_type.component_names[comIndex]">
+                                                <strong><label>{{post.content_type.component_names[comIndex]}}:</label></strong>
+                                            </div>
+                                                {{post.components[comIndex].type_data.data}} 
+                                        </div>
+                                        <div ng-if="component=='number'">
+                                            <div class="col-lg-3 col-md-3 col-sm-4" ng-show="post.content_type.component_names[comIndex]">
+                                                <strong><label>{{post.content_type.component_names[comIndex]}}:</label></strong>
+                                            </div>
+                                            
+                                                {{post.components[comIndex].type_data.data | number : 2}}
+                                               
+                                        </div>
+                                        <div ng-if="component=='datetime'">                                        
+                                            <div class="col-lg-3 col-md-3 col-sm-4" ng-show="post.content_type.component_names[comIndex]">
+    
+                                            
+                                                <strong><label>{{post.content_type.component_names[comIndex]}}:</label></strong>
+                                            </div>
+    
+                                                {{post.components[comIndex].type_data.data|date:'medium'}} 
+                                        </div>
+                                        <div ng-if="component=='video'">
+                                            <div class="col-lg-3 col-md-3 col-sm-4" ng-show="post.content_type.component_names[comIndex]">
+    
+                                                <strong><label>{{post.content_type.component_names[comIndex]}}</label></strong>:
+                                            </div>
+                                                <a ng-href="{{post.components[comIndex].type_data.data}}">{{post.components[comIndex].type_data.data}}</a> 
+                                        </div>
+                                        <div ng-if="component=='image'">
+                                            <div class="col-lg-3 col-md-3 col-sm-4" ng-show="post.content_type.component_names[comIndex]">
+                                                <strong><label>{{post.content_type.component_names[comIndex]}}</label></strong>
+                                            </div >
+                                                <img  style="text-align:center; vertical-align:middle; max-width:440px;  max-height:440px;" ng-src="http://34.209.230.231:8000/{{post.components[comIndex].type_data.data}}"></p> 
+                                                
+                                        </div>
+                                        <div ng-if="component=='dropdown'">
+                                             <p>
+                                                <strong><label>{{post.content_type.component_names[comIndex]}}</label></strong>:
+                                                {{post.components[comIndex].type_data.data}} 
+                                            </p>
+                                        </div>
+                                        <div ng-if="component=='radiobutton'">
+                                             <p>
+                                                <strong><label>{{post.content_type.component_names[comIndex]}}</label></strong>:
+                                                {{post.components[comIndex].type_data.data}} 
+                                            </p>
+                                        </div>      
+                                    </div>
+                                    <br></br>
+                                    <div ng-show="post.tags.length != 0">
+                                        <strong><label>Tags</label></strong>:
+                                        <div class="clearfix"></div>
+                                        <div class="col-sm-12">
+                                            <div ng-repeat="tag in post.tags track by $index" ng-switch on="$index % 1">
+                                                <div class="col-sm-2 interest" ng-switch-when="0" ng-hide="tag == null">
+                                                     <a ng-href="{{tag.url}}" data-toggle="tooltip" data-placement="right" title="{{tag.description}}" >#{{tag.label}}</a>
+                                                       
+                                                </div>
+                                                
+    
+                                               
+                                            </div>
+                                        </div>
+                                    </div>
+                                <!-- <div class="actions">
+                                    <div class="btn-group">
+                                            <button type="button" class="btn btn-link" ng-click="upVote(postIndex, post.id)"><i class="fa fa-thumbs-o-up"></i><span class="badge">{{post.likes}}</span></button>
+                                            <button type="button" class="btn btn-link" ng-click="downVote(postIndex, post.id)"><i class="fa fa-thumbs-o-down"></i><span class="badge">{{post.dislikes}}</span> </button>
+                                    </div>
+                                </div> -->
+                                
+                                <div class="media" ng-repeat="comment in post.comments">
+                                    <a class="pull-left" ng-href="/user/{{comment.owner.id}}">
+                                        <img class="media-object img-rounded" ng-src="https://bootdey.com/img/Content/avatar/avatar2.png">
+                                    </a>
+                                    <div class="media-body">
+                                        <div class="pull-right small">{{comment.created_date | date:'dd/MM/yyyy HH:mm'}}</div>
+                                        <!--<h4 class="media-heading">Media heading</h4>-->
+                                        <label>{{comment.owner.username}}</label><p>{{comment.text}}</p>
+                                        
+                                    </div>
+                                </div>
+                             
+
+                            </div>
+                            <!-- <div class="panel-footer">
+                                <input class="form-control" ng-model="newcomment" ng-keyup="$event.keyCode == 13 && postComment(newcomment,postIndex, post.id)" placeholder="Write a comment...">
+                            </div> -->
+                        <!-- </div> -->
+                    <!-- </div> -->
+                </div>
+                <div class="col-sm-3 text-align-center" style="margin:10px; margin-left:40%; width:150px;">
+                        <a class="btn btn-primary btn-info btn-sm" ng-click="goBack()">Go Back To Group</a>
+                    </div>
+            </div>
+                <div class="col-md-4">
+                <!--<div>
+                     <button style="width:250px; margin:10px;" class="btn followButton" rel="6">Follow</button>
+                    </div>-->
+                    
+                    <!-- <div ng-controller="SearchCtrl" class="input-group col-md-8" style="margin:20px; width:80%;" >
+    
+                            <input type="text" ng-change="checkGroupContent()" class="form-control" ng-keydown="$event.keyCode === 13 && groupSearch(query, group.id)" placeholder="Search in the Group" name="q" ng-model="query">
+                         </div>   -->
+    
+                         
+                    <div class="panel panel-info" style="margin-top:20px;">
+                         <div class="panel-heading">
+                        <div class="pull-left">
+                            <h3 class="panel-title">Upcoming Events</h3>
+    
+                        </div>
+                       
+                    </div><!-- /.panel-heading -->
+    
+                                <p class="input-group" style="margin:10px;">
+                                  <input type="text" class="form-control" uib-datepicker-popup="{{format}}" ng-model="dt" is-open="popup1.opened" datepicker-options="dateOptions" ng-required="true" close-text="Close" alt-input-formats="altInputFormats" />
+                                  <span class="input-group-btn">
+                                    <button type="button" class="btn btn-default" ng-click="openModal()"><i class="glyphicon glyphicon-calendar"></i></button>
+                                  </span>
+                                </p>
+                        
+                            <hr />
+    
+                            <!-- <button type="button" style="margin:5px; width:250px;"class="btn btn-primary">Add an Event</button> -->
+                            
+                    </div>
+    
+    
+                        
+                    <div class="panel panel-info">
+                            <div class="panel-heading">
+                              <h3 class="panel-title">Group Members</h3>
+                            </div>
+                            <div class="panel-body">
+                              
+                                <div class="row" ng-repeat="member in members | limitTo: 9" ng-switch on="$index %3">
+                                    <div class="col-md-4" ng-switch-when="0" ng-show="members[$index]">
+                                        <a href="/user/{{members[$index].id}}" class="thumbnail"><img src="assets/user.png" title="{{members[$index].username}}" alt=""></a>
+                                    </div>
+                                    <div class="col-md-4" ng-switch-when="0" ng-show="members[$index+1]">
+                                        <a href="/user/{{members[$index+1].id}}" class="thumbnail"><img src="assets/user.png" title="{{members[$index+1].username}}" alt=""></a>
+                                    </div>
+                                    <div class="col-md-4" ng-switch-when="0" ng-show="members[$index+2]">
+                                        <a href="/user/{{members[$index+2].id}}" class="thumbnail"><img src="assets/user.png" title="{{members[$index+2].username}}" alt=""></a>
+                                    </div>
+                                    
+                                </div>
+                              
+                              <div class="clearfix"></div>
+                              <a class="btn btn-primary" href="#">View All Members</a>
+                            </div>
+                          </div>
+    
+                        </div>
+    
+                </div>
+    
+                <div class="row activity" ng-show="tab == 'about'">               
+                        <div class="col-md-12">
+                                <div class="panel panel-info" style="margin:20px;">
+                                        <div class="panel-body">
+                                            <p>{{group.description}}</p>
+                                            <div class="clearfix"></div>
+                                <div class="bot-border"></div>
+                                <div ng-repeat="tag in group.tags" ng-switch on="$index % 3">
+    
+                                    <div class="col-sm-5 interest" ng-switch-when="0" ng-show="group.tags[$index]">
+                                         <a href="{{group.tags[$index].url}}"><strong>#{{group.tags[$index].label}}</strong></a>   
+                                    </div>
+                                    <div class="col-sm-5 interest" ng-switch-when="0" ng-show="group.tags[$index+1]">
+                                         <a href="{{group.tags[$index+1].url}}"><strong>#{{group.tags[$index+1].label}}</strong></a>   
+                                    </div>
+                                    <div class="col-sm-2 interest" ng-switch-when="0" ng-show="group.tags[$index+2]">
+                                         <a href="{{group.tags[$index+2].url}}"><strong>#{{group.tags[$index+2].label}}</strong></a>   
+                                    </div>
+                                </div>
+                                <div class="clearfix"></div>
+                                            
+                                        </div> 
+                
+                                </div>
+                        </div>                      
+                      </div>
+
+                </div>
+               
+            </div>
+    
+            </div>
+            </div>
+    
+            <!-- <div ng-include src='"modules/templatecreate/templatecreate.view.html"' ng-controller='TemplateCreateCtrl'></div> -->
+    
+        </div>
+    
+        
+              <script type="text/javascript">
+              
+              
+                $('button.followButton').live('click', function(e){
+                    e.preventDefault();
+                    $button = $(this);
+                    if($button.hasClass('following')){
+                                    
+                        $button.removeClass('following');
+                        $button.removeClass('unfollow');
+                        $button.text('Follow');
+                    } else {
+                                    
+                        $button.addClass('following');
+                        $button.text('Following');
+                    }
+                });
+                
+                $('button.followButton').hover(function(){
+                     $button = $(this);
+                    if($button.hasClass('following')){
+                        $button.addClass('unfollow');
+                        $button.text('Unfollow');
+                    }
+                }, function(){
+                    if($button.hasClass('following')){
+                        $button.removeClass('unfollow');
+                        $button.text('Following');
+                    }
+                });  
+                
+                
+    
+              
+              </script>
+    
+    
+
+

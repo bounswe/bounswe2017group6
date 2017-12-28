@@ -14,7 +14,7 @@
     function TemplateCreateCtrl($scope,  $rootScope, $location, TemplateService, $routeParams)
     {
 		$scope.choices = [{id: '1', selection:[]}];
-		$scope.req = {name:'',components:[],component_names:[]};
+		$scope.req = {name:'',components:[],component_names:[],dropdowns:[],checkboxes:[]};
 		 /**
          * @ngdoc
          * @name addNewChoice
@@ -60,6 +60,7 @@
 		    var newSelectNo=$scope.choices[index].selection.length+1;
 		    var newSelectNo = item.selection.length+1;
 		    $scope.choices[index].selection.push({'id':newSelectNo});
+			console.log($scope.choices);
 		  };
 		  /**
          * @ngdoc
@@ -90,14 +91,30 @@
 			for(i=0;i<$scope.choices.length;i++) { 
 				$scope.req.components.push($scope.choices[i].type);
 				$scope.req.component_names.push($scope.choices[i].name);
+				if($scope.choices[i].type=="dropdown"){
+					drop={name:$scope.choices[i].name,items:[]}
+					for(j=0;j<$scope.choices[i].selection.length;j++){
+						drop.items.push({title:$scope.choices[i].selection[j].name});
+					}
+					
+					$scope.req.dropdowns.push(drop);
+				}
+				else if($scope.choices[i].type=="checkbox"){
+					check={name:$scope.choices[i].name,items:[]}
+					for(j=0;j<$scope.choices[i].selection.length;j++){
+						check.items.push({title:$scope.choices[i].selection[j].name});
+					}
+					
+					$scope.req.checkboxes.push(check);
+				}
 			}
 			console.log($scope.req);
-
+			
 			TemplateService
 		                .createTemplate($routeParams.id, $scope.req)
 		                .then(handleSuccess, handleError);
 						
-		       
+		    
 			
 		  };
 		   /**
@@ -114,6 +131,8 @@
 			$scope.temps=response.data;
 			console.log($scope.temps);
 			$rootScope.$broadcast('AddTemplate', $scope.temps);
+			$scope.choices = [{id: '1', selection:[]}];
+			$scope.req = {name:'',components:[],component_names:[],dropdowns:[],checkboxes:[]};
 			//$rootScope.PostCtrl.templates.push(response.data);
             //console.log($scope.posts);
 
@@ -121,6 +140,8 @@
 
         function handleError(error) {
             $scope.error = error;
+			$scope.choices = [{id: '1', selection:[]}];
+			$scope.req = {name:'',components:[],component_names:[],dropdowns:[],checkboxes:[]};
             //console.log(error);
         }
 

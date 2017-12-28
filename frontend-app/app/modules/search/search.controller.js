@@ -11,23 +11,38 @@
          .module("interestHub")
          .controller("SearchCtrl", SearchCtrl);
      
-     function SearchCtrl($q, $scope,  $rootScope, $location,  $window, SearchService, GroupService, UserService,$routeParams)
+     function SearchCtrl($q, $scope,  $rootScope, $location,  $window, $routeParams, $timeout, PostService, SearchService, GroupService, UserService)
      {
          $scope.isSearched=false;
          $scope.searchedUsers=[];
          $scope.search = search;
+         $scope.groupSearch = groupSearch;
          $scope.showGroups = showGroups;
          $scope.showPeople = showPeople;
          $scope.searchUser = searchUser;
+         $scope.searchContent = searchContent;
+         $scope.searchGroupContent = searchGroupContent;
          function search(query){
             console.log(query);
 
             $location.path("/search/"+query);
+
             console.log(query);
             console.log($routeParams);
             searchUser($routeParams.q);
 
             searchGroup(query);
+            searchContent(query);
+            searchGroupContent(query,$routeParams.id);
+         }
+
+         function groupSearch(query,groupId){
+            console.log(query);
+            $location.path("group/"+groupId+"/search/"+query);
+
+            console.log($routeParams);
+
+            searchGroupContent(query,groupId);
          }
          function showGroups(){
             GroupService.getAllGroups().then(function(response){
@@ -46,6 +61,8 @@
             console.log($routeParams);
             searchUser($routeParams.q);
             searchGroup($routeParams.q);
+            searchContent($routeParams.q);
+            searchGroupContent($routeParams.q,$routeParams.id);
             /*GroupService.getAllGroups().then(function(response){
                 $scope.groups = response.data;
             });*/
@@ -55,11 +72,13 @@
          }
          $scope.groupSec= true;
          $scope.peopleSec=true; 
+         $scope.contentSec=true;
         $scope.users=[];
-         init();
+        init();
         
+
         /**
-         }
+
          * @ngdoc
          * @name searchUser
          * @methodOf SearchCtrl
@@ -105,6 +124,51 @@
                 },handleError);
         }
 
+
+
+         function searchContent(query){
+             console.log("content"+query);
+            SearchService.searchContent(query)
+                .then(function(response){
+                    console.log(response.data);
+                    $scope.searchedContents = response.data;
+                },handleError);
+        }
+
+		
+		
+      
+        function searchGroupContent(query, groupId){
+
+           console.log("groupcontent"+query);
+         
+
+                    SearchService.searchGroupContent(query, groupId)
+                       .then(
+                           function(response){
+                               console.log(response.data);
+
+                            $scope.query=query;
+                        $scope.searchedGroupContents= response.data;   
+
+                  
+                  console.log("searchedGroupPosts",$scope.searchedGroupContents);
+                  },handleError);
+      }
+
+
+
+      $scope.checkGroupContent = function(){
+       if($scope.query.length === 0 || typeof $scope.query === 'undefined'){
+           PostService
+               .getAllPosts($routeParams.id)
+               .then(handleSuccess, handleError);
+
+       }else{
+          
+        }
+      } 
+
         $scope.goToProfile=function (selected) {
             if($scope.isSearched==true){  
 
@@ -127,6 +191,10 @@
             $scope.isSearched=false;
         }
        
+
+        $scope.goBack=function(){
+            $location.path('group/'+$routeParams.id);
+        }
   
  	}
  })();

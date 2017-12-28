@@ -125,6 +125,7 @@ public class User_MyPosts_Fragment extends Fragment {
                 startActivity(intent);
             }
         };
+
         contentList.sort(new Comparator<Content>() {
             @Override
             public int compare(Content o1, Content o2) {

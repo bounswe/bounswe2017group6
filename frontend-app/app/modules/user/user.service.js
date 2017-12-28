@@ -106,8 +106,8 @@
          *
          * @description
          * Method to upload profile photo of user
-         * @param {userID} id of the user 
-         * @param {photo} new image to update profile
+         * @param {int} id of the user 
+         * @param {file} new image to update profile
          * @returns {httpPromise} resolve with fetched data.
          */ 
         

@@ -10,12 +10,11 @@
     angular
         .module("interestHub")
         .controller("RecommendationCtrl", RecommendationCtrl);
-        function RecommendationCtrl($scope,  $rootScope, $routeParams, $q, $location, $localStorage, RecommendationService)
+        function RecommendationCtrl($scope,  $rootScope, $routeParams, $q, $location, $localStorage,UserService, RecommendationService)
         {
             $scope.suggestedUsers = [];
             $scope.suggestedGroups = [];
             function init() {
-                console.log("adfklasdf");
                 RecommendationService.recommendUsers()
                     .then(getUsers, handleError);
                 RecommendationService.recommendGroups()
@@ -36,7 +35,22 @@
             function getUsers(response) {
        
                 console.log(response.data);
-                $scope.suggestedUsers = response.data;
+                suggestedUsers = response.data;
+                   
+                $q.all(suggestedUsers.map(function (user) {
+                          UserService.getUser(user.id)
+                              .then(
+                                  function(response){
+                                      if(response.status != 404){
+                                          user = response.data;
+                                    
+                                      };
+                                           $scope.suggestedUsers.push(user);
+                                  },handleError);
+                     
+            
+                })).then(function () {
+                });
             }
             /**
              * @ngdoc

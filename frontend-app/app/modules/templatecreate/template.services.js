@@ -74,13 +74,21 @@
          * @returns {httpPromise} resolve with fetched data.
          */ 
         function deleteTemplate(groupId,templateID){
+			return $http({  
+				method: "DELETE",  
+				url: "https://limitless-sands-55256.herokuapp.com/http://34.209.230.231:8000/group/" +groupId+'/content-types/',  
+				data: templateID,  
+				headers: {'Content-Type': 'application/json', Authorization: "Bearer " + $localStorage.token }  
+			});
+			
+			/*
             return $http.delete('https://limitless-sands-55256.herokuapp.com/http://34.209.230.231:8000/group/'+groupId+'/content-types/'+templateID,{
                 headers: {
                     'Content-Type' : 'application/json',
                     'Authorization': 'Bearer ' + $localStorage.token
 
                 }
-            });
+            });*/
         }
          /**
          * @ngdoc

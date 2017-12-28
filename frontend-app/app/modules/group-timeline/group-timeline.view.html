@@ -13,7 +13,7 @@
                             </div>
 
                             <div class="text-center">
-                                 <img data-no-retina="" class="img-rounded img-responsive img-bordered-primary" ng-src= "http://34.209.230.231:8000/{{group.logo_img}}" style="width: auto; height: auto;max-width: 160x;max-height: 160px;">
+                                 <img data-no-retina="" class="img-rounded img-responsive img-bordered-primary" ng-src= "{{group.logo_img}}" style="width: auto; height: auto;max-width: 160x;max-height: 160px;">
                                
                                 
                             </div>  
@@ -66,7 +66,7 @@
                                  
                                         </ul>
                                     </div>
-                                    <img  ng-src="http://34.209.230.231:8000/{{group.logo_img}}" class="img-responsive full-width" alt="cover" style="max-height:200px;">
+                                    <img  ng-src="{{group.cover_img}}" class="img-responsive full-width" alt="cover" style="max-height:200px;">
                                 </div>
                                 <ul class="list-unstyled no-padding hidden-sm hidden-xs cover-menu" ng-init="tab='timeline'">
                                     <li  ng-click="tab = 'timeline'" ng-class="{'active': tab == 'timeline'}"><a href="#"><i class="fa fa-fw fa-clock-o"></i> <span>Timeline</span></a></li>
@@ -118,6 +118,35 @@
 									<input ng-hide="true" class="form-control input-lg no-border" placeholder="" ng-model="content.comps[tab.component_names[$index]]"></input>
 									
 									<input type="file" accept="image/*" file-model="myFile" id="{{tab.component_names[$index]}}"/>
+									
+									<!--filesArray[tab.component_names[$index]]-->
+								</div>
+								<div ng-if="component=='checkbox'" class="row-activity">
+									<div ng-repeat="checkb in tab.checkboxes">
+										<div ng-show="checkb.name==tab.component_names[$parent.$index]">
+											<div class="row-activity" ng-repeat="it in checkb.items track by $index">
+											<div class="col-lg-4 col-md-4 col-sm-4">
+											<div class="col-lg-10 col-md-10 col-sm-10 pull-right">{{it.title}}</div>
+											<input class="col-lg-2 col-md-2 col-sm-2" type="checkbox" ng-model="content.comps[tab.component_names[$parent.$parent.$index]].selected[$index]" ng-click="checksth($index,tab.component_names[$parent.$parent.$index])">
+											</input>
+											</div>
+											</div>
+										</div>
+									</div>
+									<br></br>
+									
+									<!--filesArray[tab.component_names[$index]]-->
+								</div>
+								
+								<div ng-if="component=='dropdown'" class="row-activity">
+									<div ng-repeat="dropd in tab.dropdowns">
+										
+										<div ng-show="dropd.name==tab.component_names[$parent.$index]">
+										<select class="form-control" ng-model="content.comps[tab.component_names[$parent.$parent.$index]].selected[$index]" ng-options="it.title for it in dropd.items">
+										<option value="" disabled>- Please Choose -</option></select>
+										</div>
+									</div>
+									
 									
 									<!--filesArray[tab.component_names[$index]]-->
 								</div>
@@ -211,7 +240,9 @@
                                 <button type="button" class="btn btn-link"><i class="fa fa-video-camera"></i></button>
                                 <button type="button" class="btn btn-link"><i class="fa fa-calendar-o"></i></button>
                             </div>-->
-                            
+                            <button type="button" class="btn btn-info" ng-click="removeTemplate()">
+							Delete
+							</button>  
                             <div class="pull-right" >
 
                            
@@ -223,79 +254,110 @@
                             </div>  
                         </div>
                     </div>
-					
+
+
 
 
                    <div class="panel panel-info" ng-repeat="post in posts " ng-init="postIndex = $index">
                         <div class="panel-heading">
-                            <img src="https://bootdey.com/img/Content/avatar/avatar1.png" class="img-rounded">
+                            
+                            <div ng-show="post.owner.profile.photo==null">
+                                  <img ng-src="/assets/user.jpg" class="img-rounded">
+                            </div>
+                             <div ng-show="post.owner.profile.photo">
+                                  <img ng-src="{{post.owner.profile.photo}}" class="img-rounded">
+                            </div>
+                            
                             <div class="pull-right text-right">
                                 <i class="fa fa-calendar"></i><br> {{post.created_date | limitTo:10}}
                             </div>
-                            <div><strong>{{post.owner.username}}</strong></div>
+                            <div><a ng-href="user/{{post.owner.id}}"><strong>{{post.owner.username}}</strong></a></div>
                             <!--<div class="small"><i class="fa fa-map-marker"></i> Medellin, Colombia</div>-->
                         </div>
                         <div class="panel-body">
 
                                 <div id="components" class="col-lg-12 col-md-12 col-sm-12" ng-repeat="component in post.content_type.components track by $index " ng-init="comIndex= $index">
 
-                                    <div  ng-if="component=='text'">
+                                    <div component-id="{{post.components[comIndex].id}}" ng-if="component=='text'">
+
 
                                         <div class="col-lg-3 col-md-3 col-sm-4" ng-show="post.content_type.component_names[comIndex]">
-                                            <strong><label>{{post.content_type.component_names[comIndex]}}:</label></strong>
+                                            <div class="col-lg-3 col-md-3 col-sm-3"><strong><label>{{post.content_type.component_names[comIndex]}}:</label></strong></div>
                                         </div>
+										<div class="col-lg-9 col-md-9 col-sm-9">
                                             {{post.components[comIndex].type_data.data}} 
+										</div>
                                            
                                         
                                     </div>
-                                    <div ng-if="component=='longtext'">
+                                    <div component-id="{{post.components[comIndex].id}}" ng-if="component=='longtext'">
                                         <div class="col-lg-3 col-md-3 col-sm-4" ng-show="post.content_type.component_names[comIndex]">
-                                            <strong><label>{{post.content_type.component_names[comIndex]}}:</label></strong>
+                                            <div class="col-lg-3 col-md-3 col-sm-3"><strong><label>{{post.content_type.component_names[comIndex]}}:</label></strong></div>
                                         </div>
+										<div class="col-lg-9 col-md-9 col-sm-9">
                                             {{post.components[comIndex].type_data.data}} 
+											</div>
                                     </div>
-                                    <div ng-if="component=='number'">
+                                    <div component-id="{{post.components[comIndex].id}}" ng-if="component=='number'">
                                         <div class="col-lg-3 col-md-3 col-sm-4" ng-show="post.content_type.component_names[comIndex]">
-                                            <strong><label>{{post.content_type.component_names[comIndex]}}:</label></strong>
+                                            <div class="col-lg-3 col-md-3 col-sm-3"><strong><label>{{post.content_type.component_names[comIndex]}}:</label></strong></div>
                                         </div>
                                         
                                             {{post.components[comIndex].type_data.data | number : 2}}
                                            
                                     </div>
-                                    <div ng-if="component=='datetime'">                                        
+                                    <div component-id="{{post.components[comIndex].id}}" ng-if="component=='datetime'">                                        
                                         <div class="col-lg-3 col-md-3 col-sm-4" ng-show="post.content_type.component_names[comIndex]">
-
-                                        
-                                            <strong><label>{{post.content_type.component_names[comIndex]}}:</label></strong>
+                                            <div class="col-lg-3 col-md-3 col-sm-3"><strong><label>{{post.content_type.component_names[comIndex]}}:</label></strong></div>
                                         </div>
 
                                             {{post.components[comIndex].type_data.data|date:'medium'}} 
                                     </div>
-                                    <div ng-if="component=='video'">
+                                    <div component-id="{{post.components[comIndex].id}}" ng-if="component=='video'">
                                         <div class="col-lg-3 col-md-3 col-sm-4" ng-show="post.content_type.component_names[comIndex]">
 
                                             <strong><label>{{post.content_type.component_names[comIndex]}}</label></strong>:
                                         </div>
                                             <a ng-href="{{post.components[comIndex].type_data.data}}">{{post.components[comIndex].type_data.data}}</a> 
                                     </div>
-                                    <div ng-if="component=='image'">
+                                    <div component-id="{{post.components[comIndex].id}}" ng-if="component=='image'">
                                         <div class="col-lg-3 col-md-3 col-sm-4" ng-show="post.content_type.component_names[comIndex]">
                                             <strong><label>{{post.content_type.component_names[comIndex]}}</label></strong>
                                         </div >
                                             <img  style="text-align:center; vertical-align:middle; max-width:440px;  max-height:440px;" ng-src="http://34.209.230.231:8000/{{post.components[comIndex].type_data.data}}"></p> 
 											
                                     </div>
-                                    <div ng-if="component=='dropdown'">
+                                    <div component-id="{{post.components[comIndex].id}}" ng-if="component=='dropdown'">
                                          <p>
                                             <strong><label>{{post.content_type.component_names[comIndex]}}</label></strong>:
-                                            {{post.components[comIndex].type_data.data}} 
+											<div  ng-repeat="dropdo in post.content_type.dropdowns">
+												<div class="row-activity" ng-if="dropdo.name==post.content_type.component_names[comIndex]">
+													<div ng-repeat="it in dropdo.items">
+														<div class="col-lg-3 col-md-3 col-sm-4" ng-show="it.id==post.components[comIndex].type_data.selected">
+															{{it.title}}
+														</div>
+													</div>
+												</div>
+											</div>
                                         </p>
+										<br></br>
                                     </div>
-                                    <div ng-if="component=='radiobutton'">
+                                    <div component-id="{{post.components[comIndex].id}}" ng-if="component=='checkbox'">
                                          <p>
                                             <strong><label>{{post.content_type.component_names[comIndex]}}</label></strong>:
-                                            {{post.components[comIndex].type_data.data}} 
+											<div class="row-activity" ng-repeat="checkbo in post.content_type.checkboxes">
+												<div  class="row-activity" ng-if="checkbo.name==post.content_type.component_names[comIndex]">
+													<div ng-repeat="it in checkbo.items">
+														<div ng-repeat="selds in post.components[comIndex].type_data.selecteds">
+														<div class="col-lg-3 col-md-3 col-sm-4" ng-show="it.id==selds">
+															{{it.title}}
+														</div>
+														</div>
+													</div>
+												</div>
+											</div>
                                         </p>
+										<br></br>
                                     </div>      
                                 </div>
 								<br></br>
@@ -316,14 +378,24 @@
                                 </div>
                             <div class="actions">
                                 <div class="btn-group">
-                                        <button type="button" class="btn btn-link" ng-click="upVote(postIndex, post.id)"><i class="fa fa-thumbs-o-up"></i><span class="badge">{{post.likes}}</span></button>
-                                        <button type="button" class="btn btn-link" ng-click="downVote(postIndex, post.id)"><i class="fa fa-thumbs-o-down"></i><span class="badge">{{post.dislikes}}</span> </button>
+                                        <button type="button" class="btn btn-link " ng-click="upVote(postIndex, post.id)"><i class="fa fa-thumbs-o-up"></i><span class="badge">{{post.likes}}</span></button>
+                                        <button type="button" class="btn btn-link " ng-click="downVote(postIndex, post.id)"><i class="fa fa-thumbs-o-down"></i><span class="badge">{{post.dislikes}}</span> </button>
+										
+										
+										
                                 </div>
+								<div class="btn-group pull-right" ng-show="post.owner.id==user.id">
+										<span class="pull-right">
+										<button type="button" class="btn btn-link" ng-click="remove(post.id)"><i class="glyphicon glyphicon-remove"></i></button>
+										<button type="button" class="btn btn-link" ng-click="edit(post.id)"><i class="glyphicon glyphicon-pencil"></i></button>
+										</span>
+										
+								</div>
                             </div>
                             
                             <div class="media" ng-repeat="comment in post.comments">
                                 <a class="pull-left" ng-href="/user/{{comment.owner.id}}">
-                                    <img class="media-object img-rounded" ng-src="https://bootdey.com/img/Content/avatar/avatar2.png">
+                                    <img class="media-object img-rounded" ng-src="{{comment.owner.profile.photo}}">
                                 </a>
                                 <div class="media-body">
                                     <div class="pull-right small">{{comment.created_date | date:'dd/MM/yyyy HH:mm'}}</div>
@@ -346,6 +418,12 @@
                  <button style="width:250px; margin:10px;" class="btn followButton" rel="6">Follow</button>
                 </div>-->
                 
+                <div ng-controller="SearchCtrl" class="input-group col-md-8" style="margin:20px; width:80%;" >
+
+                        <input type="text" ng-change="checkGroupContent()" class="form-control" ng-keydown="$event.keyCode === 13 && groupSearch(query, group.id)" placeholder="Search in the Group" name="q" ng-model="query">
+                     </div>  
+
+                     
                 <div class="panel panel-info" style="margin-top:20px;">
                      <div class="panel-heading">
                     <div class="pull-left">
@@ -368,6 +446,7 @@
                         
                 </div>
 
+
                     
                 <div class="panel panel-info">
                         <div class="panel-heading">
@@ -376,14 +455,42 @@
                         <div class="panel-body">
                           
                             <div class="row" ng-repeat="member in members | limitTo: 9" ng-switch on="$index %3">
+
                                 <div class="col-md-4" ng-switch-when="0" ng-show="members[$index]">
-                                    <a href="/user/{{members[$index].id}}" class="thumbnail"><img src="assets/user.png" title="{{members[$index].username}}" alt=""></a>
+                                    <a href="/user/{{members[$index].id}}">
+                                         <div ng-show="members[$index].profile.photo" class="thumbnail">
+                                              <img ng-src="{{members[$index].profile.photo}}" title="{{members[$index].username}}" alt="" >
+                                            </div>
+                                             <div ng-show="members[$index].profile.photo==null" class="thumbnail">
+                                              <img ng-src="/assets/user.jpg" title="{{members[$index].username}}" alt="">
+                                            </div>
+                                     
+                                    </a>
                                 </div>
                                 <div class="col-md-4" ng-switch-when="0" ng-show="members[$index+1]">
-                                    <a href="/user/{{members[$index+1].id}}" class="thumbnail"><img src="assets/user.png" title="{{members[$index+1].username}}" alt=""></a>
+                           
+                                    <a href="/user/{{members[$index+1].id}}">
+
+                                         <div ng-show="members[$index+1].profile.photo" class="thumbnail">
+                                              <img ng-src="{{members[$index+1].profile.photo}}" title="{{members[$index+1].username}}" alt="" >
+                                            </div>
+                                             <div ng-show="members[$index+1].profile.photo==null" class="thumbnail">
+                                              <img ng-src="/assets/user.jpg" title="{{members[$index+1].username}}" alt="">
+                                            </div>
+
+                                        </a>
                                 </div>
                                 <div class="col-md-4" ng-switch-when="0" ng-show="members[$index+2]">
-                                    <a href="/user/{{members[$index+2].id}}" class="thumbnail"><img src="assets/user.png" title="{{members[$index+2].username}}" alt=""></a>
+                               
+                                    <a href="/user/{{members[$index+2].id}}">
+
+                                        <div ng-show="members[$index+2].profile.photo" class="thumbnail">
+                                              <img ng-src="{{members[$index+2].profile.photo}}" title="{{members[$index+2].username}}" alt="" >
+                                            </div>
+                                             <div ng-show="members[$index+2].profile.photo==null" class="thumbnail">
+                                              <img ng-src="/assets/user.jpg" title="{{members[$index+2].username}}" alt="">
+                                            </div>
+                                        </a>
                                 </div>
                                 
                             </div>

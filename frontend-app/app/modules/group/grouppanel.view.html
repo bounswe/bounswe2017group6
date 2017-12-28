@@ -12,7 +12,16 @@
 
                     <li class="list-group-item">
                         <div class="col-sm-2">
-                            <img data-no-retina="" style="width: auto; height: auto; max-width:30px; max-height: 30px;" class="img-rounded img-responsive img-bordered-primary" ng-src= "http://34.209.230.231:8000/{{group.logo_img}}">
+
+                             <div ng-show="group.logo_img">
+                                 <img data-no-retina="" style="width: auto; height: auto; max-width:30px; max-height: 30px;" class="img-rounded img-responsive img-bordered-primary" ng-src= "{{group.logo_img}}">
+                                             
+                            </div>
+                             <div ng-show="group.logo_img==null">
+                               <img data-no-retina="" style="width: auto; height: auto; max-width:30px; max-height: 30px;" class="img-rounded img-responsive img-bordered-primary" ng-src= "/assets/group.jpg">
+                            </div>
+
+                       
                            
 
                         </div>
@@ -20,6 +29,8 @@
                             <a href="/group/{{group.id}}" style="margin-left: 10px;">{{group.name}}</a>
                         </div>
                     </li>
+                     <br></br>
+
                 </ul>
                 <div class="bot-border"></div>
                 <ul class="list-group no-margin text-center">
