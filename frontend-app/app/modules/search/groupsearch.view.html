@@ -13,7 +13,7 @@
                                 </div>
     
                                 <div class="text-center">
-                                     <img data-no-retina="" class="img-rounded img-responsive img-bordered-primary" ng-src= "http://34.209.230.231:8000/{{group.logo_img}}" style="width: auto; height: auto;max-width: 160x;max-height: 160px;">
+                                     <img data-no-retina="" class="img-rounded img-responsive img-bordered-primary" ng-src= "{{group.logo_img}}" style="width: auto; height: auto;max-width: 160x;max-height: 160px;">
                                    
                                     
                                 </div>  
@@ -66,7 +66,7 @@
                                      
                                             </ul>
                                         </div>
-                                        <img  ng-src="http://34.209.230.231:8000/{{group.logo_img}}" class="img-responsive full-width" alt="cover" style="max-height:200px;">
+                                        <img  ng-src="{{group.cover_img}}" class="img-responsive full-width" alt="cover" style="max-height:200px;">
                                     </div>
                                     <ul class="list-unstyled no-padding hidden-sm hidden-xs cover-menu" ng-init="tab='timeline'">
                                         <li  ng-click="tab = 'timeline'" ng-class="{'active': tab == 'timeline'}"><a href="#"><i class="fa fa-fw fa-clock-o"></i> <span>Timeline</span></a></li>
