@@ -276,14 +276,16 @@
 
         </div>
         <div class="col-md-4">
-            <div class="panel panel-info">
+                <div ng-include src='"modules/group/grouppanel.view.html"' ng-controller='GroupCtrl'></div>
+                
+            <!-- <div class="panel panel-info">
                  <div class="panel-heading">
                 <div class="pull-left">
                     <h3 class="panel-title">Groups</h3>
                 </div>
                
-            </div><!-- /.panel-heading -->
-            <div class="panel-body rounded">
+            </div>/.panel-heading -->
+            <!-- <div class="panel-body rounded">
                                   
                 
                     <li class="list-group-item" ng-repeat="group in groups" ng-switch on="$index %3">
@@ -291,18 +293,18 @@
                         <a href="/group/{{group.id}}" ng-switch-when="0" ng-show="groups[$index+1]"><h5>{{groups[$index+1].name}}</h5></a>
                         <a href="/group/{{group.id}}" ng-switch-when="0" ng-show="groups[$index+2]"><h5>{{groups[$index+2].name}}</h5></a>
 
-                    </li>
+                    </li> -->
                     <!--<img class="group-image img-rounded" src="https://raw.githubusercontent.com/olasitarska/djangogirls/gh-pages/resources/graphics/logo_square.png" alt=""> -->
                      <!--<div><strong>Django Girls</strong></div>-->
                     
                    
              
-            </div>
+            <!-- </div>
                 
             </div>
         </div>
        
-    </div>
+    </div> -->
     <div class="row activity" ng-show="tab == 'about'" ng-init="edit = false">
         <div class="col-md-12">
 
