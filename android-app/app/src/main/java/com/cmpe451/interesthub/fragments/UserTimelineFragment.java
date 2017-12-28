@@ -20,6 +20,9 @@ import com.cmpe451.interesthub.models.Content;
 import com.cmpe451.interesthub.models.Group;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import retrofit2.Call;
@@ -106,6 +109,7 @@ public class UserTimelineFragment extends Fragment {
 
                         }
                     });
+
                 }
 
 
@@ -143,6 +147,19 @@ public class UserTimelineFragment extends Fragment {
     }
 
     public void setAdapter(final List<Content> contentList){
+
+        contentList.sort(new Comparator<Content>() {
+            @Override
+            public int compare(Content o1, Content o2) {
+                if(o1.getCreatedDate().equals(o2.getCreatedDate()))
+                    return 0;
+                else{
+                    return o2.getCreatedDate().compareTo(o1.getCreatedDate());
+                }
+            }
+        });
+
+
         final LinearLayoutManager ll = new LinearLayoutManager(((UserActivity)getActivity()));
         ll.setOrientation(LinearLayoutManager.VERTICAL);
         MultipleContentAdapter.OnItemClickListener listener = new MultipleContentAdapter.OnItemClickListener() {
@@ -154,7 +171,7 @@ public class UserTimelineFragment extends Fragment {
                 startActivity(intent);
             }
         };
-        MultipleContentAdapter adapter = new MultipleContentAdapter(context,contentList,listener,hub);
+        MultipleContentAdapter adapter = new MultipleContentAdapter(getContext(),contentList,listener,hub);
 
         postList.setLayoutManager(ll);
 

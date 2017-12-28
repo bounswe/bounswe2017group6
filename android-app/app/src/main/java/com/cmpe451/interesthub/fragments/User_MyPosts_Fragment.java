@@ -21,6 +21,7 @@ import com.cmpe451.interesthub.models.Content;
 import com.cmpe451.interesthub.models.Group;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import retrofit2.Call;
@@ -124,7 +125,17 @@ public class User_MyPosts_Fragment extends Fragment {
                 startActivity(intent);
             }
         };
-        MultipleContentAdapter adapter = new MultipleContentAdapter(context,contentList,listener,hub);
+        contentList.sort(new Comparator<Content>() {
+            @Override
+            public int compare(Content o1, Content o2) {
+                if(o1.getCreatedDate().equals(o2.getCreatedDate()))
+                    return 0;
+                else{
+                    return o2.getCreatedDate().compareTo(o1.getCreatedDate());
+                }
+            }
+        });
+        MultipleContentAdapter adapter = new MultipleContentAdapter(getContext(),contentList,listener,hub);
 
         postList.setLayoutManager(ll);
 
