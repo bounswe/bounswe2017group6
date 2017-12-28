@@ -121,11 +121,14 @@
 
       }
 
-      function accept(userId){
-        console.log("UserId" + userId);
-          GroupService.acceptRequest($routeParams.id, userId)
+      function accept(user){
+        console.log("User" + user.id);
+          GroupService.acceptRequest($routeParams.id, user.id)
             .then(function(response){
               console.log(response.data);
+
+              $scope.requests.splice(user);
+              $scope.members.push(user);
             },handleError);
 
       }
