@@ -28,7 +28,7 @@ class GroupContentList(APIView):
         try:
             igroup = InterestGroup.objects.get(pk=pk)
             print(igroup)
-            serializer = ContentSerializer(igroup.contents.all(), many=True)
+            serializer = ContentSerializer(igroup.contents.order_by('-created_date'), many=True)
             return Response(serializer.data)
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
