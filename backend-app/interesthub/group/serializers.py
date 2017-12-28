@@ -42,6 +42,10 @@ class InterestGroupSerializer(serializers.HyperlinkedModelSerializer):
                 resp["is_joined"] = True
             else:
                 resp["is_joined"] = False
+            if self.context["request"].user == value.owner:
+                resp["is_admin"] = True
+            else:
+                resp["is_admin"] = False
         except Exception as e:
             pass
         return resp
