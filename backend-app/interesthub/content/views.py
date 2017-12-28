@@ -18,7 +18,7 @@ class ContentTypeViewSet(viewsets.ModelViewSet):
 class ContentViewSet(viewsets.ModelViewSet):
     # authentication_classes = (JSONWebTokenAuthentication, )
     permission_classes = (IsAuthenticated, canSeeContent)
-    queryset = Content.objects.order_by('created_date')
+    queryset = Content.objects.order_by('-created_date')
     serializer_class = ContentSerializer
 
 class ContentCommentList(APIView):
