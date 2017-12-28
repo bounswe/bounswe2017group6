@@ -124,7 +124,7 @@ public class User_MyPosts_Fragment extends Fragment {
                 startActivity(intent);
             }
         };
-        MultipleContentAdapter adapter = new MultipleContentAdapter(context,contentList,listener,hub);
+        MultipleContentAdapter adapter = new MultipleContentAdapter(getContext(),contentList,listener,hub);
 
         postList.setLayoutManager(ll);
 
