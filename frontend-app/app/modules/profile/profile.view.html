@@ -237,10 +237,10 @@
             <div class="panel-body rounded">
                                   
                 
-                    <li class="list-group-item" ng-repeat="group in groups" ng-switch on="$index %3">
-                        <a href="/group/{{group.id}}" ng-switch-when="0" ng-show="groups[$index]"><h5>{{groups[$index].name}}</h5></a>
-                        <a href="/group/{{group.id}}" ng-switch-when="0" ng-show="groups[$index+1]"><h5>{{groups[$index+1].name}}</h5></a>
-                        <a href="/group/{{group.id}}" ng-switch-when="0" ng-show="groups[$index+2]"><h5>{{groups[$index+2].name}}</h5></a>
+                   
+                    <li class="list-group-item" ng-repeat="group in groups">
+                        <a href="/group/{{group.id}}" ng-show="group"><h5>{{group.name}}</h5></a>
+                        
 
                     </li>
                     <!--<img class="group-image img-rounded" src="https://raw.githubusercontent.com/olasitarska/djangogirls/gh-pages/resources/graphics/logo_square.png" alt=""> -->
@@ -411,6 +411,12 @@
                                 <input id="date" type="text" datetime="yyyy-MM-dd" name="birthdate" ng-model="user.profile.birthdate" required class="form-control">
                             </div>
 
+                            <div class="clearfix"></div>
+                            <div class="bot-border"></div>
+                              <div class="col-sm-5 col-xs-6 tital " >About:</div>
+                            <div class="col-sm-7"> 
+                                <input type="about" name="about" ng-model="user.profile.about" required class="form-control">
+                            </div>
                             <div class="clearfix"></div>
                             <div class="bot-border"></div>
 
