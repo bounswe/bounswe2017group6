@@ -77,6 +77,12 @@
             console.log($scope.user.profile.interests);            
             if($scope.me == false){
                 isFollow();
+            }else{
+                console.log("asdfjkasdkfsdf");
+                 UserService.getGroups($scope.user.id)
+                .then(function(response){
+                    $scope.groups = response.data;
+                });
             }
             
             $scope.posts = [];
@@ -84,10 +90,8 @@
             $scope.followings = [];
             $scope.followers = [];
             posts = [];
-            UserService.getGroups($scope.user.id)
-                .then(function(response){
-                    $scope.groups = response.data;
-                });
+
+           
 
             UserService.getContents($scope.user.id)
                 .then(function(response){
@@ -197,6 +201,8 @@
         function isFollow(userID){
             UserService.getFollowingsOfCurrent()
                 .then(function(response){
+                   
+                    
                     followings = response.data;
                     for(var i = 0; followings.length;i++ ){
                         if(followings[i].id == $scope.user.id){

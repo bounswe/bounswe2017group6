@@ -21,7 +21,10 @@
             joinGroup: joinGroup,
             leaveGroup: leaveGroup,
 			uploadCover:uploadCover,
-			uploadLogo:uploadLogo
+			uploadLogo:uploadLogo,
+            getWaitings:getWaitings,
+            acceptRequest:acceptRequest
+
         };
         return api;
          /**
@@ -72,6 +75,17 @@
             });
         }
 		
+        function acceptRequest(groupId,userId){
+            console.log(groupId);
+            console.log(userId);
+            return $http.post('https://limitless-sands-55256.herokuapp.com/http://34.209.230.231:8000/group/'+groupId +'/waitings/',{"id":userId},{
+                headers: {
+                  
+                    'Authorization': 'Bearer ' + $localStorage.token
+
+                }
+            });
+        }
 		/**
          * @ngdoc
          * @name uploadCover
@@ -149,6 +163,17 @@
          */ 
         function getGroup(groupID){
             return $http.get('https://limitless-sands-55256.herokuapp.com/http://34.209.230.231:8000/groups/'+groupID , {
+                headers: {
+                    'Content-Type' : 'application/json',
+                    'Authorization': 'Bearer ' + $localStorage.token
+
+                }
+            });
+        }
+
+        function getWaitings(groupID){
+            //http://34.209.230.231:8000/group/21/waitings/
+            return $http.get('https://limitless-sands-55256.herokuapp.com/http://34.209.230.231:8000/group/'+groupID +'/waitings/', {
                 headers: {
                     'Content-Type' : 'application/json',
                     'Authorization': 'Bearer ' + $localStorage.token
