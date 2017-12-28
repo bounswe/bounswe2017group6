@@ -280,15 +280,42 @@
                             <div class="panel-body">
                               
                                 <div class="row" ng-repeat="member in members | limitTo: 9" ng-switch on="$index %3">
-                                    <div class="col-md-4" ng-switch-when="0" ng-show="members[$index]">
-                                        <a href="/user/{{members[$index].id}}" class="thumbnail"><img src="assets/user.png" title="{{members[$index].username}}" alt=""></a>
-                                    </div>
-                                    <div class="col-md-4" ng-switch-when="0" ng-show="members[$index+1]">
-                                        <a href="/user/{{members[$index+1].id}}" class="thumbnail"><img src="assets/user.png" title="{{members[$index+1].username}}" alt=""></a>
-                                    </div>
-                                    <div class="col-md-4" ng-switch-when="0" ng-show="members[$index+2]">
-                                        <a href="/user/{{members[$index+2].id}}" class="thumbnail"><img src="assets/user.png" title="{{members[$index+2].username}}" alt=""></a>
-                                    </div>
+                                      <div class="col-md-4" ng-switch-when="0" ng-show="members[$index]">
+                                    <a href="/user/{{members[$index].id}}">
+                                         <div ng-show="members[$index].profile.photo" class="thumbnail">
+                                              <img ng-src="{{members[$index].profile.photo}}" title="{{members[$index].username}}" alt="" >
+                                            </div>
+                                             <div ng-show="members[$index].profile.photo==null" class="thumbnail">
+                                              <img ng-src="/assets/user.jpg" title="{{members[$index].username}}" alt="">
+                                            </div>
+                                     
+                                    </a>
+                                </div>
+                                <div class="col-md-4" ng-switch-when="0" ng-show="members[$index+1]">
+                           
+                                    <a href="/user/{{members[$index+1].id}}">
+
+                                         <div ng-show="members[$index+1].profile.photo" class="thumbnail">
+                                              <img ng-src="{{members[$index+1].profile.photo}}" title="{{members[$index+1].username}}" alt="" >
+                                            </div>
+                                             <div ng-show="members[$index+1].profile.photo==null" class="thumbnail">
+                                              <img ng-src="/assets/user.jpg" title="{{members[$index+1].username}}" alt="">
+                                            </div>
+
+                                        </a>
+                                </div>
+                                <div class="col-md-4" ng-switch-when="0" ng-show="members[$index+2]">
+                               
+                                    <a href="/user/{{members[$index+2].id}}">
+
+                                        <div ng-show="members[$index+2].profile.photo" class="thumbnail">
+                                              <img ng-src="{{members[$index+2].profile.photo}}" title="{{members[$index+2].username}}" alt="" >
+                                            </div>
+                                             <div ng-show="members[$index+2].profile.photo==null" class="thumbnail">
+                                              <img ng-src="/assets/user.jpg" title="{{members[$index+2].username}}" alt="">
+                                            </div>
+                                        </a>
+                                </div>
                                     
                                 </div>
                               
