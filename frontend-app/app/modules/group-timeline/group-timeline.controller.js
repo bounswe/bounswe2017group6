@@ -18,10 +18,10 @@
       console.log($scope.joined);
       checkJoined();
       $scope.joinGroup = joinGroup;
-	  $scope.checkJoined=checkJoined;
       $scope.leaveGroup = leaveGroup;
       console.log($routeParams.id);
-    
+      $scope.requests = [];
+      $scope.accept = accept;
       $scope.group = GroupService.getGroup($routeParams.id)
                         .then(handleSuccess,handleError);
        /**
@@ -61,7 +61,9 @@
          * @param {object} group the group will be shown
          */ 
       function handleSuccess(response) {
+
             $scope.group = response.data;
+             console.log("ADMIN" + $scope.group.is_admin);
             $scope.members = [];
             members = [];   
             GroupService.getMembers($routeParams.id)
@@ -84,12 +86,47 @@
                 });
               },handleError);
 
+              if($scope.group.is_admin == true){
+                  console.log("reajsdfjkasdlkf");
+                  GroupService.getWaitings($routeParams.id)
+                    .then(function(response){
+                        console.log(response.data);
+                        requests = response.data;
+                         $q.all(requests.map(function (user) {
+                       
+                              UserService.getUser(user.id)
+                                  .then(function (response) {
+                                          console.log(response.data);
+                                          user = response.data;
+                                          console.log(user);
+                                          $scope.requests.push(user);
+                                      },handleError);
+                             
+                       
+                                 
+                          })).then(function () {
+                        
+                        }); 
+                   
+   
+                    },handleError);
+              }      
+
                    
       }
 
       function handleError(error) {
             $scope.error = error;
             console.log(error);
+
+      }
+
+      function accept(userId){
+        console.log("UserId" + userId);
+          GroupService.acceptRequest($routeParams.id, userId)
+            .then(function(response){
+              console.log(response.data);
+            },handleError);
 
       }
        /**
@@ -101,8 +138,11 @@
          * Method for joining a group
          * @param {int} groupId the group will be joined
          */ 
+      }
       function joinGroup(groupId){
-        $scope.joined = true;
+          if($scope.group.is_public){
+            $scope.joined = true;
+          }
           GroupService.joinGroup(groupId)
               .then(function(response){
                 console.log(response.data);
@@ -219,5 +259,5 @@
       
       
      
-    	}
+    	
 })();
