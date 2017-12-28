@@ -28,7 +28,7 @@ class UserProfile(models.Model):
     )
 
     gender = models.CharField(max_length=12, choices=GENDER_CHOICES, blank=True, null=True)
-    contacts = models.CharField(max_length=150)
+    contacts = models.CharField(max_length=150, default="")
     about = models.TextField(default="")
     photo = models.ImageField(
         upload_to='user/',
