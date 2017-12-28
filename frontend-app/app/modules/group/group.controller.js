@@ -145,12 +145,13 @@
          * @param {object} group the group will be added
          */      
         function handleSuccessGroup(response) {
-			for(i=0;i<$scope.files.length;i++){
-				var y=Object.keys($scope.files[i]);
+			fil=$scope.files;
+			for(i=0;i<fil.length;i++){
+				var y=Object.keys(fil[i]);
 				if(y[0]=="logo"){
 					console.log("logo");
 					GroupService
-						.uploadLogo(response.data.id,$scope.files[i][y[0]])
+						.uploadLogo(response.data.id,fil[i][y[0]])
 						.then(function(res){
 							console.log(res.data);
 						},handleError)
@@ -158,7 +159,7 @@
 				else if(y[0]=="cover"){
 					console.log("cover")
 					GroupService
-						.uploadCover(response.data.id,$scope.files[i][y[0]])
+						.uploadCover(response.data.id,fil[i][y[0]])
 						.then(function(res){
 							console.log(res.data);
 						},handleError)
