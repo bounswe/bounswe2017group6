@@ -13,7 +13,7 @@
     
     function TemplateCreateCtrl($scope,  $rootScope, $location, TemplateService, $routeParams)
     {
-		$scope.choices = [{id: '1', selection:[]}];
+		$scope.choices = [{id: '1', selection:[{'id':1}]}];
 		$scope.req = {name:'',components:[],component_names:[],dropdowns:[],checkboxes:[]};
 		 /**
          * @ngdoc
@@ -26,7 +26,7 @@
          */   
 		$scope.addNewChoice = function() {
 			var newItemNo = $scope.choices.length+1;
-			$scope.choices.push({'id':newItemNo,selection:[]});
+			$scope.choices.push({'id':newItemNo,selection:[{'id':1}]});
 		};
 		  /**
          * @ngdoc
@@ -131,7 +131,7 @@
 			$scope.temps=response.data;
 			console.log($scope.temps);
 			$rootScope.$broadcast('AddTemplate', $scope.temps);
-			$scope.choices = [{id: '1', selection:[]}];
+			$scope.choices = [{id: '1', selection:[{'id':1}]}];
 			$scope.req = {name:'',components:[],component_names:[],dropdowns:[],checkboxes:[]};
 			//$rootScope.PostCtrl.templates.push(response.data);
             //console.log($scope.posts);
@@ -140,7 +140,7 @@
 
         function handleError(error) {
             $scope.error = error;
-			$scope.choices = [{id: '1', selection:[]}];
+			$scope.choices = [{id: '1', selection:[{'id':1}]}];
 			$scope.req = {name:'',components:[],component_names:[],dropdowns:[],checkboxes:[]};
             //console.log(error);
         }
