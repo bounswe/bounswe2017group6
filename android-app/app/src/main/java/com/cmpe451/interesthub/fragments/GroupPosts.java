@@ -23,6 +23,7 @@ import com.cmpe451.interesthub.models.Group;
 import com.cmpe451.interesthub.models.Message;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import retrofit2.Call;
@@ -129,6 +130,16 @@ public class GroupPosts extends Fragment {
     }
 
     public void setPost(View view){
+        contentList.sort(new Comparator<Content>() {
+            @Override
+            public int compare(Content o1, Content o2) {
+                if(o1.getCreatedDate().equals(o2.getCreatedDate()))
+                    return 0;
+                else{
+                    return o2.getCreatedDate().compareTo(o1.getCreatedDate());
+                }
+            }
+        });
         final LinearLayoutManager ll = new LinearLayoutManager(getActivity());
         ll.setOrientation(LinearLayoutManager.VERTICAL);
 
