@@ -62,8 +62,8 @@
                                         </button>
                                         <ul class="dropdown-menu pull-right no-border" role="menu">
                                             <li class="active"><a href="#"><i class="fa fa-fw fa-clock-o"></i> <span>Timeline</span></a></li>
-                                            <li><a href="#"><i class="fa fa-fw fa-user"></i> <span>About</span></a></li>
-                                 
+                                            <li><a href="#"><i class="fa fa-fw fa-user"></i> <span>About </span></a></li>
+                                            <li ><a href="#"><i class="fa fa-fw fa-user"></i> <span>Requests</span></a></li>
                                         </ul>
                                     </div>
                                     <img  ng-src="{{group.cover_img}}" class="img-responsive full-width" alt="cover" style="max-height:200px;">
@@ -71,6 +71,7 @@
                                 <ul class="list-unstyled no-padding hidden-sm hidden-xs cover-menu" ng-init="tab='timeline'">
                                     <li  ng-click="tab = 'timeline'" ng-class="{'active': tab == 'timeline'}"><a href="#"><i class="fa fa-fw fa-clock-o"></i> <span>Timeline</span></a></li>
                                     <li ng-click="tab = 'about'" ng-class="{'active': tab == 'about'}" ><a href="#"><i class="fa fa-fw fa-user"></i> <span>About</span></a></li>
+                                      <li ng-show="group.is_admin" ng-click="tab = 'admin'" ng-class="{'active': tab == 'admin'}" ><a href="#"><i class="fa fa-fw fa-user"></i> <span>Requests</span></a></li>
                                 
                     
                                     
@@ -80,9 +81,9 @@
             </div>
             <div class="divider"></div>
             <div class="row activity" ng-show="tab == 'timeline'" >                  
-            <div class="col-md-8" >
-                <div ng-controller="PostCtrl">
-                    <div class="panel panel-info" style="margin-top:5%;" >
+            <div class="col-md-8"  >
+                <div  ng-controller="PostCtrl" ng-show="group.is_public == true || joined" >
+                    <div ng-show="joined" class="panel panel-info" style="margin-top:5%;" >
                      <uib-tabset active="active">
                       <!--uib-tab index="0" heading="Post">
                       <div class="panel-body">
@@ -530,6 +531,40 @@
                             </div>
                     </div>
             </div>
+             <div class="row activity" ng-show="tab == 'admin'">               
+                    <div class="col-md-12">
+                            <div class="panel panel-info" style="margin:20px;">
+                                    <div class="panel-body">
+                                        <ul class="list-group list-group-dividered list-group-full">
+
+                                            <li class="list-group-item" ng-repeat="request in requests">
+                                              <div class="media">
+                                                <div class="media-left">
+                                                  <a class="avatar avatar-lg " href="javascript:void(0)">
+                                                    <img ng-src="{{request.profile.photo}}" class="img-rounded">
+
+                                            
+                                                  </a>
+                                                </div>
+                                                <div class="media-body">
+                                                  <div class="pull-right">
+                                                    <button type="button" class="btn btn-success btn-sm waves-effect waves-light" ng-click="accept(request)">Accept</button>
+                                                  </div>
+                                                  <div><h4><a class="name" href="/user/{{request.id}}">{{request.profile.name}} {{request.profile.lastname}}</a></div></h4>
+                                           
+
+                                                </div>
+                                              </div>
+                                            </li>
+                                          </ul>
+                           
+                           
+                                        
+                                    </div> 
+            
+                            </div>
+                    </div>
+            </div>            
            
         </div>
 

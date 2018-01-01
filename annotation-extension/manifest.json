@@ -9,14 +9,16 @@
     },
     "content_scripts": [
         {
-            "js": ["jquery/jquery-3.2.1.min.js","annotator-full.1.2.7/annotator-full.min.js","annotate.js"],
+            "js": ["jquery/jquery-3.2.1.min.js","annotator-full.1.2.10/annotator-full.min.js","annotate.js"],
             "matches": ["<all_urls>"],
-            "css": ["annotator-full.1.2.7/annotator.min.css"]
+            "css": ["annotator-full.1.2.10/annotator.min.css"],
+            "all_frames": true,
+            "run_at": "document_end"
         }
     ],
     "background":
     {
-        "scripts": ["jquery/jquery-3.2.1.min.js","annotator-full.1.2.7/annotator-full.min.js"]
+        "scripts": ["jquery/jquery-3.2.1.min.js","annotator-full.1.2.10/annotator-full.min.js"]
     },
     "permissions": [
         "activeTab",

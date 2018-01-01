@@ -314,6 +314,7 @@ public class MultipleContentAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
 
         if(contentList.get(position).getComponents()!=null || contentList.get(position).getComponents().size()!=0 ){
+
             ((ViewHolder)holder).owner.setText(contentList.get(position).getOwner().getUsername()+" > " + contentList.get(position).getGroupName());
             setProfilepic(((ViewHolder)holder).pic,contentList.get(position).getOwner().getId());
 

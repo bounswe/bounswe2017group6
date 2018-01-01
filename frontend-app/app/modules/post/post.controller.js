@@ -351,7 +351,7 @@
 			/*PostService.getPost($routeParams.id,response.data.id).then(function(res){
 				
 			},handleError);*/
-			$scope.posts.push(response.data);
+			$scope.posts.unshift(response.data);
 			$scope.files=[];
 		}
 
