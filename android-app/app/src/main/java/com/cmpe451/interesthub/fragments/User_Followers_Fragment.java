@@ -3,6 +3,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
@@ -52,6 +53,7 @@ public class User_Followers_Fragment extends Fragment {
     private String mParam2;
     List<User> userList;
     List<User> requestList;
+    private Handler mHandler;
     InterestHub hub;
     RecyclerView list;
     Button requestbutton;
@@ -81,7 +83,9 @@ public class User_Followers_Fragment extends Fragment {
         requestbutton = view.findViewById(R.id.followrequestbutton);
         requestbutton.setVisibility(View.GONE);
         hub = (InterestHub) getActivity().getApplication();
-        refresh(userid);
+        mHandler = new Handler();
+        startRepeatingTask();
+
         return view;
     }
     public void refresh(long userid){
@@ -90,11 +94,13 @@ public class User_Followers_Fragment extends Fragment {
             hub.getApiService().getFollowers().enqueue(new Callback<FollowersList>() {
                 @Override
                 public void onResponse(Call<FollowersList> call, Response<FollowersList> response) {
-                    if (response != null && response.body() != null)
+                    if (response != null && response.body() != null) {
                         userList = response.body().getFollowers();
-                    setAdapter();
-                    requestList = response.body().getRequests();
-                    setRequestAdapter();
+                        setAdapter();
+                        requestList = response.body().getRequests();
+
+                        setRequestAdapter();
+                    }
                 }
 
                 @Override
@@ -124,6 +130,7 @@ public class User_Followers_Fragment extends Fragment {
     public void setAdapter(){
         final LinearLayoutManager ll = new LinearLayoutManager( getActivity());
         ll.setOrientation(LinearLayoutManager.VERTICAL);
+
         list.setLayoutManager(ll);
         UserCardListAdapter.OnItemClickListener listener = new UserCardListAdapter.OnItemClickListener() {
             @Override
@@ -137,8 +144,10 @@ public class User_Followers_Fragment extends Fragment {
         };
         final UserCardListAdapter adapter = new UserCardListAdapter(getContext(), userList, listener);
         list.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
     }
     public void setRequestAdapter(){
+
         Log.d("REQUESTS", String.valueOf(requestList.size()));
         if(requestList.size()>0){
             requestbutton.setText("Follow Requests ("+requestList.size()+")");
@@ -165,51 +174,54 @@ public class User_Followers_Fragment extends Fragment {
                     UserFollowRequestCardListAdapter.OnItemClickListener approveListener = new UserFollowRequestCardListAdapter.OnItemClickListener() {
                         @Override
                         public void onItemClick(final int pos) {
+                            if(pos<requestList.size()) {
+                                JsonObject innerObject = new JsonObject();
+                                innerObject.addProperty("id", requestList.get(pos).getId());
+                                Gson gson = new Gson();
+                                String json = gson.toJson(innerObject);
+                                Log.d("JSON", json);
+                                RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json);
+                                hub.getApiService().approveFollowRequest(requestBody).enqueue(new Callback<User>() {
+                                    @Override
+                                    public void onResponse(Call<User> call, Response<User> response) {
 
-                            JsonObject innerObject = new JsonObject();
-                            innerObject.addProperty("id", requestList.get(pos).getId());
-                            Gson gson = new Gson();
-                            String json = gson.toJson(innerObject);
-                            Log.d("JSON",json);
-                            RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json);
-                            hub.getApiService().approveFollowRequest(requestBody).enqueue(new Callback<User>() {
-                                @Override
-                                public void onResponse(Call<User> call, Response<User> response) {
+                                        refresh(userid);
 
-                                    refresh(userid);
+                                    }
 
-                                }
+                                    @Override
+                                    public void onFailure(Call<User> call, Throwable t) {
 
-                                @Override
-                                public void onFailure(Call<User> call, Throwable t) {
-
-                                }
-                            });
+                                    }
+                                });
+                            }
 
                         }
                     };
                     UserFollowRequestCardListAdapter.OnItemClickListener cancelListener = new UserFollowRequestCardListAdapter.OnItemClickListener() {
                         @Override
                         public void onItemClick(int pos) {
-                            JsonObject innerObject = new JsonObject();
-                            innerObject.addProperty("id", requestList.get(pos).getId());
-                            Gson gson = new Gson();
-                            String json = gson.toJson(innerObject);
-                            Log.d("JSON",json);
-                            RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json);
-                            hub.getApiService().deleteFollowRequest(requestBody).enqueue(new Callback<User>() {
-                                @Override
-                                public void onResponse(Call<User> call, Response<User> response) {
+                            if(pos<requestList.size()) {
+                                JsonObject innerObject = new JsonObject();
+                                innerObject.addProperty("id", requestList.get(pos).getId());
+                                Gson gson = new Gson();
+                                String json = gson.toJson(innerObject);
+                                Log.d("JSON", json);
+                                RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json);
+                                hub.getApiService().deleteFollowRequest(requestBody).enqueue(new Callback<User>() {
+                                    @Override
+                                    public void onResponse(Call<User> call, Response<User> response) {
 
-                                    refresh(userid);
+                                        refresh(userid);
 
-                                }
+                                    }
 
-                                @Override
-                                public void onFailure(Call<User> call, Throwable t) {
+                                    @Override
+                                    public void onFailure(Call<User> call, Throwable t) {
 
-                                }
-                            });
+                                    }
+                                });
+                            }
 
                         }
                     };
@@ -220,7 +232,16 @@ public class User_Followers_Fragment extends Fragment {
                 }
             });
 
+
+        }else{
+
         }
+
+
+
+
+
+
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -244,5 +265,23 @@ public class User_Followers_Fragment extends Fragment {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
+    void startRepeatingTask() {
+        mStatusChecker.run();
+    }
+
+    void stopRepeatingTask() {
+        mHandler.removeCallbacks(mStatusChecker);
+    }
+    Runnable mStatusChecker = new Runnable() {
+        @Override
+        public void run() {
+            try {
+                refresh(userid);
+            } finally {
+
+                mHandler.postDelayed(mStatusChecker, 5000);
+            }
+        }
+    };
 }
 

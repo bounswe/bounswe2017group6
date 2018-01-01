@@ -44,7 +44,10 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.io.File;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import okhttp3.MediaType;
@@ -468,6 +471,23 @@ public class NewContent extends AppCompatActivity {
                         t.setData(text.getText().toString());
                         comp.setType_data(t);
                     }
+                    else if(c.getComponents().get(i).equals("datetime")) {
+                        text = (EditText) ((LinearLayout) lay.getChildAt(i)).getChildAt(1);
+                        comp.setComponent_type(c.getComponents().get(i));
+                        comp.setOrder(i + 1);
+                        TypeData t = new TypeData();
+                        SimpleDateFormat parser = new SimpleDateFormat("d-MM-yyy");
+                        Date date = null;
+                        try {
+                            date = parser.parse(text.getText().toString());
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss.SXXX");
+                        if(date==null) date = new Date();
+                        t.setData(simpleDateFormat.format(date).toString());
+                        comp.setType_data(t);
+                    }
                     clist.add(comp);
 
                 }
@@ -498,7 +518,9 @@ public class NewContent extends AppCompatActivity {
         int imagecounter=0;
             @Override
             public void onResponse(Call<Content> call, Response<Content> response) {
+
                 if(response!=null && response.body()!=null) {
+                    Log.d("Post ekleme"," BASARILI ");
                     sendContent = response.body();
 
                     for(int i=0;i<sendContent.getComponents().size();i++){

@@ -2,6 +2,7 @@ package com.cmpe451.interesthub.fragments;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -40,6 +41,7 @@ public class User_Following_Fragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private Handler mHandler;
     List<User> userList;
     InterestHub hub;
     RecyclerView list;
@@ -68,6 +70,13 @@ public class User_Following_Fragment extends Fragment {
         list = view.findViewById(R.id.userFollowingList);
         userList  = new ArrayList<User>();
         hub = (InterestHub) getActivity().getApplication();
+        mHandler = new Handler();
+        startRepeatingTask();
+
+        return view;
+    }
+
+    public void refresh(long userid){
         if(userid==0) {
             hub.getApiService().getFollowings().enqueue(new Callback<List<User>>() {
                 @Override
@@ -98,7 +107,6 @@ public class User_Following_Fragment extends Fragment {
                 }
             });
         }
-        return view;
     }
     public void setAdapter(){
         final LinearLayoutManager ll = new LinearLayoutManager( getActivity());
@@ -139,5 +147,23 @@ public class User_Following_Fragment extends Fragment {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
+    void startRepeatingTask() {
+        mStatusChecker.run();
+    }
+
+    void stopRepeatingTask() {
+        mHandler.removeCallbacks(mStatusChecker);
+    }
+    Runnable mStatusChecker = new Runnable() {
+        @Override
+        public void run() {
+            try {
+                refresh(userid);
+            } finally {
+
+                mHandler.postDelayed(mStatusChecker, 5000);
+            }
+        }
+    };
 }
 
