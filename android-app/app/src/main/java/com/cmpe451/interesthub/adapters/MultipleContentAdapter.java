@@ -39,8 +39,11 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.squareup.picasso.Picasso;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import okhttp3.MediaType;
@@ -314,6 +317,7 @@ public class MultipleContentAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
             ((ViewHolder)holder).owner.setText(contentList.get(position).getOwner().getUsername()+" > " + contentList.get(position).getGroupName());
             setProfilepic(((ViewHolder)holder).pic,contentList.get(position).getOwner().getId());
+
             long postDate = contentList.get(position).getCreatedDate().getTime();
             long now = Calendar.getInstance().getTimeInMillis();
             long different = now-postDate;
@@ -393,8 +397,6 @@ public class MultipleContentAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                      videoi++;
 
 
-                } else if(c.getComponent_type().equals("datetime")){
-                    ;
                 }
                 else if(c.getComponent_type().equals("dropdown"))
                 {
@@ -427,6 +429,22 @@ public class MultipleContentAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                     texti++;
 
                 }
+                else if(c.getComponent_type().equals("datetime"))
+                {
+                    String date = data.getData();
+                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss.SXXX");
+                    Date d = new Date();
+                    try {
+                        d = simpleDateFormat.parse(date);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+
+                    ((ViewHolder)holder).datetime.get(datetimei).setDate(d.getTime());
+
+                    datetimei++;
+
+                }
             }
 
 
@@ -435,11 +453,13 @@ public class MultipleContentAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     }
     public void setLikersDislikers(final InterestHub hub, final TextView likedtext, final TextView dislikedtext,
                                    final Button likeButton, final Button dislikeButton,int position){
+        if( hub.getSessionController().getUser()==null ||hub.getSessionController().getUser().getId()==null) return;
         hub.getApiService().getVotesOfGroup(contentList.get(position).getId()).enqueue(new Callback<List<UpDown>>() {
             @Override
             public void onResponse(Call<List<UpDown>> call, Response<List<UpDown>> response) {
                 int liker = 0,disliker =0;
-                long userid = hub.getSessionController().getUser().getId();
+                if(hub.getSessionController().getUser()==null || hub.getSessionController().getUser().getId()==null) return;
+                Long userid = hub.getSessionController().getUser().getId();
                 if(response==null ||response.body()==null) return;
                 for(UpDown u:response.body()){
                     if(u.isUp())   {
@@ -471,24 +491,25 @@ public class MultipleContentAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             return contentList.size();
 
         }
-    public void setProfilepic(final ImageView img , long id){
-        final String url ="http://34.209.230.231:8000/users/"+id+"/";
-        hub.getApiService().getSpesificUser(url).enqueue(new Callback<User>() {
-            @Override
-            public void onResponse(Call<User> call, Response<User> response) {
-                if(response!=null && response.body()!=null){
-                    User user = response.body();
-                    Picasso.with(context)
-                            .load(user.getProfile().getPhoto())
-                            .resize(200, 200).into(img);
-                }
-            }
 
-            @Override
-            public void onFailure(Call<User> call, Throwable t) {
+        public void setProfilepic(final ImageView img , long id){
+                final String url ="http://34.209.230.231:8000/users/"+id+"/";
+                hub.getApiService().getSpesificUser(url).enqueue(new Callback<User>() {
+                    @Override
+                    public void onResponse(Call<User> call, Response<User> response) {
+                        if(response!=null && response.body()!=null){
+                            User user = response.body();
+                            Picasso.with(context)
+                                    .load(user.getProfile().getPhoto())
+                                    .resize(200, 200).into(img);
+                        }
+                    }
 
-            }
-        });
+                    @Override
+                    public void onFailure(Call<User> call, Throwable t) {
 
-    }
+                    }
+                });
+
+        }
 }

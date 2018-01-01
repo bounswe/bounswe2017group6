@@ -32,10 +32,14 @@ import com.cmpe451.interesthub.InterestHub;
 import com.cmpe451.interesthub.R;
 import com.cmpe451.interesthub.activities.ContentActivity;
 import com.cmpe451.interesthub.activities.UserActivity;
+import com.cmpe451.interesthub.models.CheckboxItems;
 import com.cmpe451.interesthub.models.Comment;
 import com.cmpe451.interesthub.models.Component;
 import com.cmpe451.interesthub.models.Content;
+import com.cmpe451.interesthub.models.DropdownItems;
 import com.cmpe451.interesthub.models.Interest;
+import com.cmpe451.interesthub.models.SingleCheckboxItems;
+import com.cmpe451.interesthub.models.SingleDropdownItems;
 import com.cmpe451.interesthub.models.TypeData;
 import com.cmpe451.interesthub.models.UpDown;
 import com.google.gson.Gson;
@@ -107,8 +111,8 @@ public class SingleContentAdapter extends RecyclerView.Adapter<RecyclerView.View
                    text.add((TextView) l.getChildAt(i));
                }
                else if(s.equals("longtext")){
-                   longtext.add((TextView) l.getChildAt(i));
-
+                   TextView t = (TextView) l.getChildAt(i);
+                   text.add(t);
                }
                else if(s.equals("title")){
                    text.add((TextView) l.getChildAt(i));
@@ -127,6 +131,14 @@ public class SingleContentAdapter extends RecyclerView.Adapter<RecyclerView.View
                }
                else if (s.equals("datetime")){
                    datetime.add((CalendarView) l.getChildAt(i));
+
+               }
+               else if (s.equals("dropdown")){
+                   text.add((TextView) l.getChildAt(i));
+
+               }
+               else if (s.equals("checkbox")){
+                   text.add((TextView) l.getChildAt(i));
 
                }
            }
@@ -183,7 +195,7 @@ public class SingleContentAdapter extends RecyclerView.Adapter<RecyclerView.View
                        l.addView((TextView) LayoutInflater.from(parent.getContext()).inflate(R.layout.post_component_text, null));
 
                    } else if (s.equals("longtext")) {
-                       l.addView((TextView) LayoutInflater.from(parent.getContext()).inflate(R.layout.post_component_longtext, null));
+                       l.addView((TextView) LayoutInflater.from(parent.getContext()).inflate(R.layout.post_component_text, null));
 
                    } else if (s.equals("image")  ) {
                        ImageView img = (ImageView) LayoutInflater.from(parent.getContext()).inflate(R.layout.post_component_image, null);
@@ -199,6 +211,14 @@ public class SingleContentAdapter extends RecyclerView.Adapter<RecyclerView.View
                    }
                    else if(s.equals("datetime")){
                        l.addView((CalendarView) LayoutInflater.from(parent.getContext()).inflate(R.layout.post_component_datetime, null));
+
+                   }
+                   else if(s.equals("dropdown")){
+                       l.addView((TextView) LayoutInflater.from(parent.getContext()).inflate(R.layout.post_component_text, null));
+
+                   }
+                   else if(s.equals("checkbox")){
+                       l.addView((TextView) LayoutInflater.from(parent.getContext()).inflate(R.layout.post_component_text, null));
 
                    }
                }
@@ -369,8 +389,8 @@ public class SingleContentAdapter extends RecyclerView.Adapter<RecyclerView.View
                     ((ViewHolder)holder).text.get(texti).setText(data.getData());
                     texti++;
                 } else if (c.getComponent_type().equals("longtext")) {
-                    ((ViewHolder)holder).longtext.get(longtexti).setText(data.getData());
-                    longtexti++;
+                    ((ViewHolder)holder).text.get(texti).setText(data.getData());
+                    texti++;
                 }
                 else if (c.getComponent_type().equals("number")) {
                     ((ViewHolder)holder).number.get(numberi).setText(data.getData());
@@ -410,6 +430,37 @@ public class SingleContentAdapter extends RecyclerView.Adapter<RecyclerView.View
                 } else if(c.getComponent_type().equals("datetime")){
 
                 }
+                else if(c.getComponent_type().equals("dropdown"))
+                {
+                    for(int it=0; it<content.getContentType().getDropdowns().size();it++){
+                        DropdownItems dd = content.getContentType().getDropdowns().get(it);
+                        for(SingleDropdownItems sd:dd.getItems()){
+                            if(sd.getId()==data.getSelected()){
+                                ((SingleContentAdapter.ViewHolder)holder).text.get(texti).setText(sd.getTitle());
+                                texti++;
+                            }
+
+                        }
+                    }
+
+                }
+                else if(c.getComponent_type().equals("checkbox"))
+                {
+                    String checkboxtext="[";
+                    for(int it=0; it<content.getContentType().getCheckboxes().size();it++){
+                        CheckboxItems dd = content.getContentType().getCheckboxes().get(it);
+                        for(SingleCheckboxItems sd:dd.getItems()){
+                            for(Long selecteds: data.getSelecteds()){
+                                if(selecteds==sd.getId())
+                                    checkboxtext+=sd.getTitle()+",";
+                            }
+                        }
+                    }
+                    if(checkboxtext.length()>1) checkboxtext = checkboxtext.substring(0,checkboxtext.length()-1);
+                    ((SingleContentAdapter.ViewHolder)holder).text.get(texti).setText(checkboxtext+"]");
+                    texti++;
+
+                }
             }
 
 
@@ -440,7 +491,6 @@ public class SingleContentAdapter extends RecyclerView.Adapter<RecyclerView.View
                 dislikedtext.setText(disliker + " people disliked this");
 
             }
-
             @Override
             public void onFailure(Call<List<UpDown>> call, Throwable t) {
 

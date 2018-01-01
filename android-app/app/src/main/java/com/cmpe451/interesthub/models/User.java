@@ -39,7 +39,7 @@ public class User {
         this.profile = profile;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
