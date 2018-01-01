@@ -28,8 +28,8 @@ class ContentTests(TestCase):
 		
 		self.assertEqual(set(data.keys()), set(["name", "components", "component_names"]))
 		self.assertEqual(data["name"], self.ctype_attr["name"])
-		self.assertEqual(data["components"], self.ctype_attr["components"])
-		self.assertEqual(data["component_names"], self.ctype_attr["component_names"])
+		self.assertEqual(set(data["components"]), set(self.ctype_attr["components"]))
+		self.assertEqual(set(data["component_names"]), set(self.ctype_attr["component_names"]))
 
 	def test_create_and_update_content_type(self):
 		self.assertTrue(self.serializer.is_valid())		
