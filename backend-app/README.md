@@ -7,7 +7,9 @@
     * Also you must have a psql role with name of `interesthub_admin`
     * You also need have a database with name of `interesthub`
     * Please make sure that `interesthub_admin` role has required priviliges on `interesthub` database.
-    * For more details, you may look /backend-app/interesthub/interesthub/settings.py.
+    * If you have dump of last version of the database (named `interesthub.sql`) you can import it with following command.
+      * `$ pg_restore --host=localhost --username=interesthub_admin --password --dbname=interesthub -C interesthub.sql`
+    * For more details (about password,host,dbname,username etc..), you may look /backend-app/interesthub/interesthub/settings.py.
   * `$ pip3 install -r requirements.txt`
 * `$ python3 manage.py migrate`
 * `$ python3 manage.py runserver`
