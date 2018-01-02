@@ -13,6 +13,8 @@ from content.utils import retrieve_content_set, create_content
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from interesthub.permissions import canSeeGroup, CanSeeUser, IsAdminOf
+from urllib.parse import urlparse
+from urllib.request import urlopen, urlretrieve, URLopener
 
 # Create your views here.
 class InterestGroupViewSet(ModelViewSet):
@@ -26,7 +28,7 @@ class GroupContentList(APIView):
         try:
             igroup = InterestGroup.objects.get(pk=pk)
             print(igroup)
-            serializer = ContentSerializer(igroup.contents.all(), many=True)
+            serializer = ContentSerializer(igroup.contents.order_by('-created_date'), many=True)
             return Response(serializer.data)
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
@@ -56,6 +58,7 @@ class GroupContentList(APIView):
             content = Content.objects.get(pk=data["id"])
             if content in igroup.contents.all():
                 igroup.contents.remove(content)
+                content.delete()
                 return Response({"message": "content is removed from the group."})
             else:
                 return Response({"error": "content does not exist in this group."})
@@ -219,14 +222,30 @@ class GroupLogo(APIView):
             print(group)
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
-        try:
-            file = request.data['file']
-            file._set_name("logo_%s_%s"%(str(group.id),file._get_name()))
-            group.logo_img = file
-            group.save()
-        except KeyError:
-            return Response({"error": "Request has no resource file attached"}, status=status.HTTP_400_BAD_REQUEST)
-        return Response({"status": "OK"})
+
+        if 'file' in request.data:
+            print("FILE")
+            try:
+                file = request.data['file']
+                file._set_name("logo_%s_%s"%(str(group.id),file._get_name()))
+                group.logo_img = file
+                group.save()
+                return Response({"status": "OK"})
+            except KeyError:
+                return Response({"error": "Request has no resource file attached"}, status=status.HTTP_400_BAD_REQUEST)
+
+        elif 'url' in request.data:
+            print("URK")
+            try:
+                url = request.data['url']
+                name = "logo_%s_%s"%(str(group.id),urlparse(url).path.split('/')[-1])
+                content = urlopen(url)
+                group.logo_img.save(name, content, save=True)
+                return Response({"status": "OK"})
+            except Exception as e:
+                return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+        return Response({"error": "url or file field does not exist"})
 
 class GroupCover(APIView):
     authentication_classes = (JSONWebTokenAuthentication, )
@@ -238,11 +257,24 @@ class GroupCover(APIView):
             print(group)
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
-        try:
-            file = request.data['file']
-            file._set_name("cover_%s_%s"%(str(group.id),file._get_name()))
-            group.cover_img = file
-            group.save()
-        except KeyError:
-            return Response({"error": "Request has no resource file attached"}, status=status.HTTP_400_BAD_REQUEST)
-        return Response({"status": "OK"})
+        if 'file' in request.data:
+            try:
+                file = request.data['file']
+                file._set_name("cover_%s_%s"%(str(group.id),file._get_name()))
+                group.cover_img = file
+                group.save()
+                return Response({"status": "OK"})
+            except KeyError:
+                return Response({"error": "Request has no resource file attached"}, status=status.HTTP_400_BAD_REQUEST)
+        elif 'url' in request.data:
+            print("URK")
+            try:
+                url = request.data['url']
+                name = "logo_%s_%s"%(str(group.id),urlparse(url).path.split('/')[-1])
+                content = urlopen(url)
+                group.cover_img.save(name, content, save=True)
+                return Response({"status": "OK"})
+            except Exception as e:
+                return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+        return Response({"error": "url or file field does not exist"})

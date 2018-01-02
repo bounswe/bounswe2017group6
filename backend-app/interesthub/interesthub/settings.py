@@ -46,7 +46,8 @@ INSTALLED_APPS = [
     'content',
     'components',
     'user',
-    'recommendation'
+    'recommendation',
+    'annotation'
 ]
 
 JWT_AUTH = { 

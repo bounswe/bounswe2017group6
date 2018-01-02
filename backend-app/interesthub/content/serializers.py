@@ -8,6 +8,7 @@ from collections import OrderedDict
 from django.contrib.auth.models import User
 from recommendation.serializers import TagSerializer
 from recommendation.models import Tag
+from operator import itemgetter
 
 class DropdownItemSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
@@ -49,16 +50,16 @@ class CheckboxDefinitionSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class ContentTypeSerializer(serializers.HyperlinkedModelSerializer):
-    checkboxes = CheckboxDefinitionSerializer(many=True)
-    dropdowns = DropdownDefinitionSerializer(many=True)
+    checkboxes = CheckboxDefinitionSerializer(many=True, required=False)
+    dropdowns = DropdownDefinitionSerializer(many=True, required=False)
     class Meta:
         model = ContentType
         fields = ("id", "name", "components", "component_names", "checkboxes", "dropdowns")
     
     def create(self, validated_data):
         print("CT", validated_data)
-        checkbox_data = validated_data.pop('checkboxes')
-        dropdown_data = validated_data.pop('dropdowns')
+        checkbox_data = validated_data.pop('checkboxes', [])
+        dropdown_data = validated_data.pop('dropdowns', [])
         ct = ContentType.objects.create(**validated_data)
         for checkbox in checkbox_data:
             print(checkbox)
@@ -85,6 +86,11 @@ class ContentSerializer(serializers.HyperlinkedModelSerializer):
         model = Content
         fields = ("id", "content_type", "created_date", "modified_date", "owner", 'components', 'tags', 'groups')
     
+    def to_representation(self, value):
+        resp = super(ContentSerializer, self).to_representation(value)
+        resp["components"] = sorted(resp["components"], key=itemgetter('order'), reverse=False)
+        return resp
+
     def to_internal_value(self, data):
         data = data.copy()
         validated_data = OrderedDict()
@@ -100,7 +106,10 @@ class ContentSerializer(serializers.HyperlinkedModelSerializer):
             if len(data["components"]) != len(content_type.components):
                 raise serializers.ValidationError("Number of components does not match with content type.")
 
-            for component in data["components"]:
+            components = sorted(data["components"], key=itemgetter('order'), reverse=False)
+            print(components)
+
+            for component in components:
                 print('comp:', component)
                 serializer = ComponentSerializer2(data=component, context=self.context)
                 if not serializer.is_valid():
